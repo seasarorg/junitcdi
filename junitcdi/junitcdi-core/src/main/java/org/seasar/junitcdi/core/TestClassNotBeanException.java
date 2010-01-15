@@ -28,10 +28,21 @@ import org.seasar.junitcdi.core.runner.CDI;
  * @author koichik
  */
 public class TestClassNotBeanException extends Exception {
+    // /////////////////////////////////////////////////////////////////
+    // instance fields
+    //
+    /** テストクラス */
+    protected final Class<?> testClass;
+
+    // /////////////////////////////////////////////////////////////////
+    // constructors
+    //
     /**
      * @param testClass
      */
     public TestClassNotBeanException(final Class<?> testClass) {
-        super(testClass.getName() + " is not a bean. check META-INF/beans.xml");
+        super(testClass.getName()
+            + " is not a bean. Check src/test/resources/META-INF/beans.xml");
+        this.testClass = testClass;
     }
 }
