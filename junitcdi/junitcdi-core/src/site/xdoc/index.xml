@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>About</title>
+	</properties>
+	<body>
+		<section name="JUnit CDI Extensions Core">
+			<ul>
+				<li>
+					<a href="#Abstract">概要</a>
+				</li>
+				<li>
+					<a href="#Injection">依存性の注入</a>
+				</li>
+				<li>
+					<a href="#Contexts">コンテキスト</a>
+				</li>
+				<li>
+					<a href="#Lifecycle_Methods">ライフサイクルメソッド</a>
+					<ul>
+						<li>
+							<a href="#JUnit4_Lifecycle_Methods">JUnit4のライフサイクルメソッド</a>
+						</li>
+						<li>
+							<a href="#CDI_Lifecycle_Method">CDIのライフサイクルメソッド</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#Events">イベント</a>
+				</li>
+			</ul>
+		</section>
+
+		<section name="Abstract">
+			<p>
+				<strong>JUnit CDI Extensions Core</strong>
+				は，JUnit4 で CDI を利用したテストを行うための基本機能を提供します．
+			</p>
+			<p>
+				テストクラスで CDI を利用するには，
+				<code>@RunWith</code>
+				アノテーションに
+				<code>org.seasar.junitcdi.core.runner.CDI</code>
+				クラスを指定します．
+			</p>
+			<source><![CDATA[
+@RunWith(CDI.class)
+public class XxxTest {
+    ...
+}
+]]></source>
+			<p>
+				これにより，CDI コンテナが準備されます．
+			</p>
+			<p>
+				JUnit CDI Extensions では，テストクラス自体も CDI で管理されます．
+				そのため，テストクラスの
+				<code>.class</code>
+				ファイルが作成されるディレクトリには
+				<code>META-INF/beans.xml</code>
+				ファイルが必要です．
+			</p>
+			<p>
+				Maven2 のディレクトリ構成であれば，
+				<code>src/test/resources/META-INF/beans.xml</code>
+				を作成します．
+			</p>
+			<p>
+				ファイルの内容は以下のようにルート要素だけで構いません．
+				詳細は CDI の仕様書を参照してください．
+			</p>
+			<source><![CDATA[
+<bean></bean>
+]]></source>
+		</section>
+
+		<section name="Injection">
+			<p>
+				テストクラスも CDI で管理されるため，通常の bean と同じように
+				<code>@Inject</code>
+				アノテーションにより bean が注入されます．
+			</p>
+			<source><![CDATA[
+@RunWith(CDI.class)
+public class XxxTest {
+    @Inject
+    XxxBean xxx;
+    ...
+}
+]]></source>
+		</section>
+
+		<section name="Contexts">
+			<p>
+				CDI コンテナはテストを実行するプロセスで一つだけ構築されますが，
+				コンテキストはテストメソッドごとに作成して破棄されるため，
+				<code>Singleton</code>
+				や
+				<code>ApplicationScoped</code>
+				もテストメソッドを実行している間だけ有効です．
+			</p>
+			<p>
+				JUnit CDI Extensions が提供する独自の「テストクラス・スコープ」は，
+				同じテストクラスのメソッドを実行している間有効なスコープを提供します．
+			</p>
+			<p>
+				「テストクラス・スコープ」を使うには，bean に
+				<code>org.seasar.junitcdi.core.TestClassScoped</code>
+				アノテーションを指定します．
+			</p>
+			<p>
+				以下の例では，テストメソッド
+				<code>hoge()</code>
+				および
+				<code>moge()</code>
+				の実行時，フィールド
+				<code>xxx</code>
+				には同じ bean が注入されます．
+			</p>
+			<source><![CDATA[
+@TestClassScoped
+public class XxxBean {
+    ...
+}
+
+@RunWith(CDI.class)
+public class XxxTest {
+    @Inject
+    XxxBean xxx;
+
+    @Test
+    public void hoge() {
+        ...
+    }
+
+    @Test
+    public void moge() {
+        ...
+    }
+    ...
+}
+]]></source>
+			<p>
+				テストクラスをまたがったスコープは提供されません．
+			</p>
+		</section>
+
+		<section name="Lifecycle Methods">
+			<subsection name="JUnit4 Lifecycle Methods">
+				<p>
+					JUnit CDI Extensions は，JUnit4 標準のライフサイクルメソッドに加えて，
+					特定のテストメソッドの前後に呼び出されるライフサイクルメソッドを提供します．
+				</p>
+				<p>
+					特定のテストメソッドの前に呼び出されるメソッドには，
+					<code>org.seasar.junitcdi.core.BeforeMethod</code>
+					アノテーションを，後に呼び出されるメソッドには
+					<code>org.seasar.junitcdi.core.AfterMethod</code>
+					を指定します．
+				</p>
+				<p>
+					以下の例では，
+					<code>beforeHoge()</code>
+					メソッドは
+					<code>hoge()</code>
+					メソッドが実行される前に，
+					<code>afterHoge()</code>
+					メソッドは
+					<code>hoge()</code>
+					メソッドが実行された後に呼び出されます．
+				</p>
+				<source><![CDATA[
+@RunWith(CDI.class)
+public class XxxTest {
+    @BeforeMethod
+    public void beforeFoo() {
+        ...
+    }
+    @Test
+    public void foo() {
+        ...
+    }
+    @AfterMethod
+    public void afterFoo() {
+        ...
+    }
+    ...
+}
+]]></source>
+				<p>
+					デフォルトでは，ライフサイクルメソッドの名前から
+					<code>before/after</code>
+					を取り除いて先頭を小文字にした名前のテストメソッドが対象となります．
+				</p>
+				<p>
+					アノテーションで対象となるテストメソッドを (複数) 明示することも出来ます．
+				</p>
+				<p>
+					以下の例では，
+					<code>before()</code>
+					メソッドは
+					<code>hoge()</code>
+					および
+					<code>moge()</code>
+					メソッドが実行される前に呼び出されます．
+				</p>
+				<source><![CDATA[
+@RunWith(CDI.class)
+public class XxxTest {
+    @BeforeMethod({"hoge", "moge"})
+    public void before() {
+        ...
+    }
+    @Test
+    public void hoge() {
+        ...
+    }
+    @Test
+    public void moge() {
+        ...
+    }
+    ...
+}
+]]></source>
+			</subsection>
+			<subsection name="CDI Lifecycle Methods">
+				<p>
+					テストクラスも CDI で管理されるため，通常の bean と同じように
+					CDI のライフサイクルメソッドを持つことが出来ます．
+				</p>
+				<p>
+					以下の例では，テストクラスのインスタンスが作成されて DI が終了した後に
+					<code>hoge()</code>
+					メソッドが，テストが終了してテストクラスのインスタンスが破棄される際に
+					<code>moge()</code>
+					メソッドが呼び出されます．
+				</p>
+				<source><![CDATA[
+@RunWith(CDI.class)
+public class XxxTest {
+    @PostConstruct
+    public void hoge() {
+        ...
+    }
+    @PreDestroy
+    public void moge() {
+        ...
+    }
+    ...
+}
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="Events">
+			<p>
+				JUnitの
+				<code>org.junit.runner.notification.RunListener</code>
+				による通知を，CDI のイベントとして任意の bean で受信することが出来ます．
+			</p>
+			<source><![CDATA[
+public class XxxBean {
+    public void onTestStarted(@Observes @TestStarted Description description) {
+        ...
+    }
+    ...
+}
+]]></source>
+			<p>
+				サポートされる通知と対応するアノテーションおよびパラメータの型は以下の通りです．
+			</p>
+			<table border="1">
+				<thead>
+					<tr>
+						<th>JUnitの通知</th>
+						<th>アノテーション</th>
+						<th>イベントの型</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<code>testStarted(Description)</code>
+						</td>
+						<td>
+							<code>org.seasar.junitcdi.core.event.TestStarted</code>
+						</td>
+						<td>
+							<code>org.junit.runner.Description</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>testFinished(Description)</code>
+						</td>
+						<td>
+							<code>org.seasar.junitcdi.core.event.TestFinished</code>
+						</td>
+						<td>
+							<code>org.junit.runner.Description</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>testFailure(Failure)</code>
+						</td>
+						<td>
+							<code>org.seasar.junitcdi.core.event.TestFailure</code>
+						</td>
+						<td>
+							<code>org.junit.runner.notification.Failure</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>testAssumptionFailure(Failure)</code>
+						</td>
+						<td>
+							<code>org.seasar.junitcdi.core.event.TestAssumptionFailure
+								</code>
+						</td>
+						<td>
+							<code>org.junit.runner.notification.Failure</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>testIgnored(Description)</code>
+						</td>
+						<td>
+							<code>org.seasar.junitcdi.core.event.TestIgnored</code>
+						</td>
+						<td>
+							<code>org.junit.runner.Description</code>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p>
+				<code>testRunStarted(Description)</code>
+				および
+				<code>testRunFinished(Result)</code>
+				はサポートされません．
+			</p>
+			<p>
+				テストメソッドに
+				<code>Qualifier</code>
+				が指定されると，それがイベントにも反映されます．
+			</p>
+			<p>
+				以下の例では，
+				<code>hoge()</code>
+				メソッドのように
+				<code>@Hoge</code>
+				で注釈されたテストメソッドが実行される前だけ
+				<code>onHogeStarted()</code>
+				メソッドが呼び出されます．
+			</p>
+			<source><![CDATA[
+@Qualifier
+@Target( { METHOD, PARAMETER })
+@Retention(RUNTIME)
+public @interface Hoge {
+}
+
+@RunWith(CDI.class)
+public class XxxTest {
+    @Test
+    @Hoge
+    public void hoge() {
+        ...
+    }
+    ...
+}
+
+public class XxxBean {
+    public void onHogeStarted(@Observes @TestStarted @Hoge Description description) {
+        ...
+    }
+    ...
+}
+]]></source>
+		</section>
+	</body>
+</document>

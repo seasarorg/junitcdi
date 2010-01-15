@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<project>
+	<body>
+		<menu name="Core">
+			<item name="概要" href="index.html" />
+			<item name="Javadoc" href="apidocs/index.html" />
+		</menu>
+		${reports}
+	</body>
+</project>

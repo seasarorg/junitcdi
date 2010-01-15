@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="junitcdi-core/src/main/java" />
+	<classpathentry kind="src" path="junitcdi-core/src/main/resources" />
+	<classpathentry kind="src" output="target/test-classes"
+		path="junitcdi-core/src/test/java" />
+	<classpathentry kind="src" output="target/test-classes"
+		path="junitcdi-core/src/test/resources" />
+	<classpathentry kind="con"
+		path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6" />
+	<classpathentry exported="true" kind="lib" path="lib/junit-4.5.jar"
+		sourcepath="libsrc/junit-4.5-src.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/cal10n-api-0.7.2.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/cdi-api-1.0.jar" sourcepath="libsrc/cdi-api-1.0-sources.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/el-api-2.1.2-b04.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/google-collections-1.0-rc3.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/javassist-3.11.0.GA.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/javax.inject-1.jar" sourcepath="libsrc/javax.inject-1-sources.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/jboss-interceptor-1.0.0-CR8.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/jboss-interceptor-api-1.1.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/jsr250-api-1.0.jar" sourcepath="libsrc/jsr250-api-1.0-sources.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/slf4j-api-1.5.9.RC1.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/slf4j-ext-1.5.9.RC1.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/slf4j-simple-1.5.9.RC1.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/weld-api-1.0.jar" sourcepath="libsrc/weld-api-1.0-sources.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/weld-core-1.0.0.jar" sourcepath="libsrc/weld-core-1.0.0-sources.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/weld-se-1.0.0-CR2.jar" sourcepath="libsrc/weld-se-1.0.0-CR2-sources.jar" />
+	<classpathentry exported="true" kind="lib"
+		path="lib/weld-spi-1.0.jar" sourcepath="libsrc/weld-spi-1.0-sources.jar" />
+	<classpathentry kind="output" path="target/classes" />
+</classpath>
