@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>Welcome</title>
+	</properties>
+	<body>
+		<section name="JUnit CDI Extensions">
+			<p>
+				<strong>JUnit CDI Extensions</strong>
+				プロジェクトは，
+				<a href="http://www.junit.org/">JUnit</a>
+				で
+				<a href="http://jcp.org/en/jsr/detail?id=299">
+					JSR-299 Contexts and Dependency Injection (CDI)
+				</a>
+				を利用するためのクラスを提供します．
+			</p>
+			<p>
+				JUnit CDI Extensionsは，CDIのRIである
+				<a href="http://seamframework.org/Weld">JBoss Weld</a>
+				を利用しています．
+			</p>
+		</section>
+
+		<section name="サブプロジェクト">
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							<a href="junitcdi-core/index.html">Core</a>
+						</td>
+						<td>
+							JUnit4のテストクラスでJSR-299 Contexts and Dependency Injection (CDI)を
+							利用するための基本機能を提供します．
+						</td>
+						<td>
+							<a href="junitcdi-core/apidocs/index.html">Javadoc</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+
+		<section name="News">
+			<dl>
+				<!--
+					<dt>2010/01/20</dt> <dd> <div> JUnit CDI Extensions 0.0.0
+					をリリースしました． ( <a href="downloads.html">ダウンロード</a> ) </div> </dd>
+				-->
+				<dt>2010/01/15</dt>
+				<dd>
+					<div>
+						JUnit CDI Extensions プロジェクトを開設しました．
+					</div>
+				</dd>
+			</dl>
+		</section>
+	</body>
+</document>

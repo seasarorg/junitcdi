@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>ダウンロード</title>
+	</properties>
+	<body>
+		<section name="ダウンロード">
+			<table>
+				<tr>
+					<td>2010/01/20</td>
+					<td>
+						<a href="junitcdi-downloads/2010-01-20/JUnitCDI-0.0.0.zip">JUnitCDI-0.0.0.zip</a>
+					</td>
+				</tr>
+			</table>
+		</section>
+	</body>
+</document>
