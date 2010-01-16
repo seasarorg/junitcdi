@@ -1,0 +1,95 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- The Basics -->
+	<artifactId>junitcdi-jta</artifactId>
+	<packaging>jar</packaging>
+	<parent>
+		<groupId>org.seasar.junitcdi</groupId>
+		<artifactId>junitcdi-project</artifactId>
+		<version>0.0.0-SNAPSHOT</version>
+	</parent>
+
+	<!-- More Project Information -->
+	<name>JUnit CDI Extensions for JTA</name>
+	<description>JUnit CDI Extensions for JTA Project</description>
+
+	<!-- Environment Settings -->
+	<repositories>
+		<repository>
+			<id>java.net</id>
+			<url>http://download.java.net/maven/glassfish/</url>
+		</repository>
+	</repositories>
+
+	<!-- Dependency Settings -->
+	<dependencies>
+		<dependency>
+			<groupId>org.seasar.junitcdi</groupId>
+			<artifactId>junitcdi-core</artifactId>
+			<version>${version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.annotation</artifactId>
+			<version>3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seasar.container</groupId>
+			<artifactId>s2-extension</artifactId>
+			<version>2.4.40</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.poi</groupId>
+					<artifactId>poi</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.seasar.container</groupId>
+			<artifactId>s2-framework</artifactId>
+			<version>2.4.40</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>aopalliance</artifactId>
+					<groupId>aopalliance</groupId>
+				</exclusion>
+				<exclusion>
+					<groupId>jboss</groupId>
+					<artifactId>javassist</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>ognl</artifactId>
+					<groupId>ognl</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>junit</artifactId>
+					<groupId>junit</groupId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>1.5.9.RC1</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.2.126</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

@@ -33,9 +33,11 @@
 		</menu>
 		<menu name="サブプロジェクト">
 			<item name="Core" href="junitcdi-core/index.html" />
+			<item name="JTA" href="junitcdi-jta/index.html" />
 		</menu>
 		<menu name="Javadoc">
 			<item name="Core" href="junitcdi-core/apidocs/index.html" />
+			<item name="JTA" href="junitcdi-jta/apidocs/index.html" />
 		</menu>
 		${reports}
 	</body>

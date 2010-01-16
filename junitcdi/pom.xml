@@ -10,6 +10,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>junitcdi-core</module>
+		<module>junitcdi-jta</module>
 	</modules>
 	<!-- More Project Information -->
 	<name>JUnit CDI Extensions Project</name>

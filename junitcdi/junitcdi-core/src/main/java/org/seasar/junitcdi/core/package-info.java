@@ -1,6 +1,5 @@
 /**
- * JUnit4のテストクラスでJSR-299 CDI(Contexts and Dependency Injection)を
- * 利用するためのクラスを提供するパッケージです．
+ * JUnit4のテストクラスで利用可能なアノテーションを提供するパッケージです．
  */
 package org.seasar.junitcdi.core;
 

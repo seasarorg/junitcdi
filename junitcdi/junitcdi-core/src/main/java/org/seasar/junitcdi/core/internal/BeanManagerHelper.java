@@ -15,11 +15,14 @@
  */
 package org.seasar.junitcdi.core.internal;
 
+import java.util.ServiceLoader;
+
 import javax.enterprise.inject.spi.BeanManager;
 
 import org.jboss.weld.bootstrap.WeldBootstrap;
 import org.jboss.weld.bootstrap.api.Bootstrap;
 import org.jboss.weld.bootstrap.api.Environments;
+import org.jboss.weld.bootstrap.api.Service;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.bootstrap.spi.Deployment;
 import org.jboss.weld.context.AbstractApplicationContext;
@@ -30,6 +33,7 @@ import org.jboss.weld.environment.se.ShutdownManager;
 import org.jboss.weld.environment.se.discovery.SEWeldDeployment;
 import org.jboss.weld.environment.se.events.ContainerInitialized;
 import org.jboss.weld.environment.se.util.WeldManagerUtils;
+import org.seasar.junitcdi.core.spi.ServicesProvider;
 
 /**
  * CDIコンテナ({@link BeanManager})の作成などを行うヘルパークラスです．
@@ -86,6 +90,10 @@ public class BeanManagerHelper {
      * @return CDIコンテナ
      */
     protected static BeanManager createBeanManager(final Deployment deployment) {
+        for (ServicesProvider provider : ServiceLoader
+            .load(ServicesProvider.class)) {
+            provider.registerServices(deployment);
+        }
         final Bootstrap bootstrap = new WeldBootstrap();
         bootstrap.startContainer(
             Environments.SE,
@@ -128,6 +136,19 @@ public class BeanManagerHelper {
     public static <T> T getBean(final BeanManager beanManager,
             final Class<T> beanClass) {
         return WeldManagerUtils.getInstanceByType(beanManager, beanClass);
+    }
+
+    /**
+     * 指定されたサービスを返します．
+     * 
+     * @param <S>
+     *            サービスの型
+     * @param serviceType
+     *            サービスの型
+     * @return サービス
+     */
+    public static <S extends Service> S getServices(final Class<S> serviceType) {
+        return deployments.get().getServices().get(serviceType);
     }
 
     /**

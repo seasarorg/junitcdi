@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>About</title>
+	</properties>
+	<body>
+		<section name="JUnit CDI Extensions for JTA">
+			<ul>
+				<li>
+					<a href="#Abstract">概要</a>
+				</li>
+				<li>
+					<a href="#DataSource">データソース</a>
+				</li>
+				<li>
+					<a href="#Declarative_Transaction">宣言的トランザクション</a>
+				</li>
+			</ul>
+		</section>
+
+		<section name="Abstract">
+			<p>
+				JUnit CDI Extensions for JTA は，JavaSE で実行される CDI コンテナで
+				<a href="http://java.sun.com/javaee/technologies/jta/index.jsp">Java Transaction API (JTA)</a>
+				を利用できるようにします．
+			</p>
+			<p>
+				JTA およびコネクションプールの実装には，
+				<a href="http://s2container.seasar.org/2.4/ja/">Seasar2</a>
+				の提供する S2JTA と S2DBCP を使用します．ただし，DI コンテナとしての Seasar2 (S2Container)
+				は使用しません．
+			</p>
+			<p>
+				テストクラスを含む任意の bean で
+				<code>javax.transaction.UserTransaction</code>
+				を DI して利用することが出来ます．
+			</p>
+			<source><![CDATA[
+@RunWith(CDI.class)
+public class XxxTest {
+    @Inject
+    UserTransaction ut;
+    ...
+}
+]]></source>
+		</section>
+
+		<section name="DataSource">
+			<p>
+				JTA と連携するデータソースを利用するには，
+				<code>org.seasar.junitcdi.jta.datasource.AbstractDataSource</code>
+				のサブクラスを作成して
+				<code>javax.annotation.sql.DataSourceDefinition</code>
+				で接続情報を注釈します．
+			</p>
+			<source><![CDATA[
+@DataSourceDefinition(
+    name = "...", 
+    className = "...", 
+    url = "...",
+    user = "...",
+    password = "...")
+public class DefaultDataSource extends AbstractDataSource {
+}
+]]></source>
+			<p>
+				このデータソースは bean として DI することが可能です．
+			</p>
+			<source><![CDATA[
+    @Inject
+    DataSource ds;
+]]></source>
+			<p>
+				接続情報は以下のように指定します．
+			</p>
+			<table border="1">
+				<thead>
+					<tr>
+						<th>要素</th>
+						<th>説明</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<code>name</code>
+						</td>
+						<td>データソースを JNDI に登録する名前です (未実装)．</td>
+					</tr>
+					<tr>
+						<td>
+							<code>className</code>
+						</td>
+						<td>
+							JDBC ドライバのクラス名です．(
+							<code>DataSourceDefinition</code>
+							本来の仕様では
+							<code>DataSource</code>
+							のクラス名を指定することになっていますが，
+							このクラスでは JDBC ドライバのクラス名として解釈します)
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>url</code>
+						</td>
+						<td>接続 URL です．</td>
+					</tr>
+					<tr>
+						<td>
+							<code>name</code>
+						</td>
+						<td>ユーザ名です．</td>
+					</tr>
+					<tr>
+						<td>
+							<code>password</code>
+						</td>
+						<td>パスワードです．</td>
+					</tr>
+				</tbody>
+			</table>
+			<p>
+				複数のデータソースが必要な場合は
+				<code>org.seasar.junitcdi.jta.datasource.AbstractDataSource</code>
+				のサブクラスを複数作成します．
+				デフォルトで使用されるデータソース (一つだけです) を除いたクラスには，qualifier
+				を指定します．
+			</p>
+			<p>
+				次の例ではデフォルトでないデータソースを qualifier
+				<code>Hoge</code>
+				で注釈しています．
+			</p>
+			<source><![CDATA[
+@Qualifier
+@Target( { TYPE, FIELD, PARAMETER })
+@Retention(RUNTIME)
+public @interface Hoge {}
+
+@Hoge
+@DataSourceDefinition(...)
+public class HogeDataSource extends AbstractDataSource {
+}
+]]></source>
+			<p>
+				このデータソースを使用する場所も同じ qualifier で注釈します．
+			</p>
+			<source><![CDATA[
+    @Inject
+    @Hoge
+    DataSource ds;
+]]></source>
+			<p>
+				データソースのスコープは
+				<code>ApplicationScoped</code>
+				であり，スコープが破棄される際に自動的にクローズされます．
+			</p>
+		</section>
+
+		<section name="Declarative Transaction">
+			<p>
+				テストメソッドに
+				<code>org.seasar.junitcdi.jta.Transactional</code>
+				アノテーションを指定することにより，JTAトランザクションの下でテストメソッドを実行することができます．
+			</p>
+			<source><![CDATA[
+@RunWith(CDI.class)
+public class XxxTest {
+    @Test
+    @Transactional
+    public void test() throws Exception {
+        ...
+    }
+    ...
+}
+]]></source>
+			<p>
+				<code>Transactional</code>
+				アノテーションをテストクラスに指定することも出来ますが，その場合はライフサイクルメソッドなども
+				トランザクション制御の対象となります (
+				<code>static</code>
+				メソッドや
+				<code>final</code>
+				メソッドは除きます)．
+				ライフサイクルメソッドなどのトランザクションは，テストメソッドのトランザクションとは別になります．
+			</p>
+			<p>
+				デフォルトでは，テストメソッドの実行が終了するとトランザクションはロールバックされます．
+				テストメソッドが正常終了した場合にトランザクションをコミットするには
+				<code>Transactional</code>
+				アノテーションの
+				<code>commit</code>
+				要素に
+				<code>true</code>
+				を指定します．
+			</p>
+			<source><![CDATA[
+    @Test
+    @Transactional(commit = true)
+    public void test() throws Exception {
+        ...
+    }
+]]></source>
+			<p>
+				<code>Transactional</code>
+				アノテーションの
+				<code>commit</code>
+				要素に
+				<code>true</code>
+				を指定した場合でも，テストメソッドが例外をスローするとトランザクションはロールバックされます．
+			</p>
+		</section>
+	</body>
+</document>

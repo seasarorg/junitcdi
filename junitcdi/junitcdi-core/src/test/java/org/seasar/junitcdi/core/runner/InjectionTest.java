@@ -27,7 +27,8 @@ import org.junit.runner.RunWith;
 import org.seasar.junitcdi.core.AfterMethod;
 import org.seasar.junitcdi.core.BeforeMethod;
 
-import static junit.framework.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 /**
  * JUnit CDI extensionsを利用したテストクラスの例です．
@@ -75,9 +76,9 @@ public class InjectionTest {
     @Test
     public void テスト() {
         System.out.println(toString() + " run test method(テスト).");
-        assertNotNull(singletonBean);
-        assertNotNull(testClassScopedBean);
-        assertNotNull(beanManager);
+        assertThat(singletonBean, notNullValue());
+        assertThat(testClassScopedBean, notNullValue());
+        assertThat(beanManager, notNullValue());
     }
 
     /** */

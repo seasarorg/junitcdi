@@ -37,12 +37,11 @@ public class TestClassScopedRegister implements Extension {
      * CDIコンテナにテストクラス・スコープを注釈する{@link TestClassScoped}を登録します．
      * </p>
      * 
-     * @param discovery
-     *            {@link BeforeBeanDiscovery}
+     * @param event
+     *            イベント
      */
-    public void beforeBeanDiscovery(
-            @Observes final BeforeBeanDiscovery discovery) {
-        discovery.addScope(TestClassScoped.class, true, false);
+    public void beforeBeanDiscovery(@Observes final BeforeBeanDiscovery event) {
+        event.addScope(TestClassScoped.class, true, false);
     }
 
     /**
@@ -51,10 +50,10 @@ public class TestClassScopedRegister implements Extension {
      * CDIコンテナにテストクラス・スコープの{@link TestClassContext コンテキスト}を登録します．
      * </p>
      * 
-     * @param discovery
-     *            {@link AfterBeanDiscovery}
+     * @param event
+     *            イベント
      */
-    public void afterBeanDiscovery(@Observes final AfterBeanDiscovery discovery) {
-        discovery.addContext(BeanManagerHelper.getTestClassContext());
+    public void afterBeanDiscovery(@Observes final AfterBeanDiscovery event) {
+        event.addContext(BeanManagerHelper.getTestClassContext());
     }
 }
