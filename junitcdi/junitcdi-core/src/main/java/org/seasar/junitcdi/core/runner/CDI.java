@@ -34,7 +34,7 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.seasar.junitcdi.core.AfterMethod;
 import org.seasar.junitcdi.core.BeforeMethod;
-import org.seasar.junitcdi.core.TestClassNotBeanException;
+import org.seasar.junitcdi.core.event.TestInfo;
 import org.seasar.junitcdi.core.internal.BeanManagerHelper;
 import org.seasar.junitcdi.core.internal.TestEventNotifier;
 
@@ -60,6 +60,12 @@ public class CDI extends BlockJUnit4ClassRunner {
     //
     /** CDIコンテナ */
     protected BeanManager beanManager;
+
+    /** テストイベントを通知するbean */
+    protected TestEventNotifier testEventNotifier;
+
+    /** テストクラスのbean定義 */
+    protected Bean<?> testBean;
 
     /** テストクラスのインスタンスを作成したコンテキスト */
     protected CreationalContext<?> creationalContext;
@@ -100,14 +106,17 @@ public class CDI extends BlockJUnit4ClassRunner {
         try {
             beanManager = BeanManagerHelper.getBeanManager();
             BeanManagerHelper.setupDefaultContexts();
-            final TestEventNotifier testEventNotifier =
-                BeanManagerHelper.getBean(beanManager, TestEventNotifier.class);
+            testEventNotifier =
+                BeanManagerHelper.getBeanInstance(
+                    beanManager,
+                    TestEventNotifier.class);
             runNotifier.addListener(testEventNotifier);
             try {
                 super.runChild(method, runNotifier);
             } finally {
                 runNotifier.removeListener(testEventNotifier);
                 BeanManagerHelper.destroyDefaultContexts();
+                testEventNotifier = null;
                 beanManager = null;
             }
         } catch (final Throwable e) {
@@ -127,6 +136,7 @@ public class CDI extends BlockJUnit4ClassRunner {
                     if (creationalContext != null) {
                         creationalContext.release();
                     }
+                    testBean = null;
                 }
             }
         };
@@ -137,14 +147,43 @@ public class CDI extends BlockJUnit4ClassRunner {
         final Class<?> testClass = getTestClass().getJavaClass();
         for (final Bean<?> bean : beanManager.getBeans(testClass)) {
             if (bean.getBeanClass() == testClass) {
+                testBean = bean;
                 creationalContext = beanManager.createCreationalContext(bean);
-                return beanManager.getReference(
+                final Object test =
+                    beanManager
+                        .getReference(bean, testClass, creationalContext);
+                testEventNotifier.testObjectObtained(new TestInfo(
+                    getDescription(),
                     bean,
-                    testClass,
-                    creationalContext);
+                    test));
+                return test;
             }
         }
         throw new TestClassNotBeanException(testClass);
+    }
+
+    @Override
+    protected Statement methodInvoker(final FrameworkMethod method,
+            final Object test) {
+        final Statement statement = super.methodInvoker(method, test);
+        return new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+                testEventNotifier.testMethodStarted(createTestInfo(null));
+                try {
+                    statement.evaluate();
+                    testEventNotifier.testMethodFinished(createTestInfo(null));
+                } catch (Throwable e) {
+                    testEventNotifier.testMethodFinished(createTestInfo(e));
+                    throw e;
+                }
+            }
+
+            private TestInfo createTestInfo(Throwable e) {
+                return new TestInfo(getDescription(), testBean, test, method
+                    .getMethod(), e);
+            }
+        };
     }
 
     @Override

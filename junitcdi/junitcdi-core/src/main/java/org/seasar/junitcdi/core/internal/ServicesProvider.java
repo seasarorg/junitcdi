@@ -13,25 +13,24 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.junitcdi.jta.internal;
+package org.seasar.junitcdi.core.internal;
 
 import org.jboss.weld.bootstrap.spi.Deployment;
-import org.jboss.weld.transaction.spi.TransactionServices;
-import org.seasar.junitcdi.core.internal.ServicesProvider;
 
 /**
- * トランザクションサービスをCDIコンテナにデプロイします．
+ * CDIコンテナにデプロイするサービスを提供します．
+ * <p>
+ * このインタフェースを実装するクラスは{@link java.util.ServiceLoader}のサービスプロバイダロード機構でロードされます．
+ * </p>
  * 
  * @author koichik
  */
-public class TransactionServicesProvider implements ServicesProvider {
-    // /////////////////////////////////////////////////////////////////
-    // methods
-    //
-    @Override
-    public void registerServices(final Deployment deployment) {
-        deployment.getServices().add(
-            TransactionServices.class,
-            new TransactionServicesImpl());
-    }
+public interface ServicesProvider {
+    /**
+     * {@link Deployment}にサービスを登録します．
+     * 
+     * @param deployment
+     *            {@link Deployment}
+     */
+    void registerServices(Deployment deployment);
 }

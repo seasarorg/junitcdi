@@ -13,24 +13,32 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.junitcdi.core.spi;
+package org.seasar.junitcdi.core.event;
 
-import org.jboss.weld.bootstrap.spi.Deployment;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import javax.inject.Qualifier;
+
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
 
 /**
- * CDIコンテナにデプロイするサービスを提供します．
+ * テストメソッドの実行が終了したイベントを受け取るための注釈です．
  * <p>
- * このインタフェースを実装するクラスは{@link java.util.ServiceLoader}のサービスプロバイダロード機構でロードされます．
+ * {@link TestInfo}型のパラメータに注釈します．
  * </p>
+ * 
+ * <pre>
+ * public void testMethodFinished(&#x40;Observes &#x40;TestMethodFinished TestInfo testInfo) {...}
+ * </pre>
  * 
  * @author koichik
  */
-public interface ServicesProvider {
-    /**
-     * {@link Deployment}にサービスを登録します．
-     * 
-     * @param deployment
-     *            {@link Deployment}
-     */
-    void registerServices(Deployment deployment);
+@Qualifier
+@Documented
+@Target(PARAMETER)
+@Retention(RUNTIME)
+public @interface TestMethodFinished {
 }

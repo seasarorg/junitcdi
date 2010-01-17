@@ -15,6 +15,7 @@
  */
 package org.seasar.junitcdi.core.internal;
 
+import java.lang.annotation.Annotation;
 import java.util.ServiceLoader;
 
 import javax.enterprise.inject.spi.BeanManager;
@@ -33,7 +34,6 @@ import org.jboss.weld.environment.se.ShutdownManager;
 import org.jboss.weld.environment.se.discovery.SEWeldDeployment;
 import org.jboss.weld.environment.se.events.ContainerInitialized;
 import org.jboss.weld.environment.se.util.WeldManagerUtils;
-import org.seasar.junitcdi.core.spi.ServicesProvider;
 
 /**
  * CDIコンテナ({@link BeanManager})の作成などを行うヘルパークラスです．
@@ -90,7 +90,7 @@ public class BeanManagerHelper {
      * @return CDIコンテナ
      */
     protected static BeanManager createBeanManager(final Deployment deployment) {
-        for (ServicesProvider provider : ServiceLoader
+        for (final ServicesProvider provider : ServiceLoader
             .load(ServicesProvider.class)) {
             provider.registerServices(deployment);
         }
@@ -127,15 +127,39 @@ public class BeanManagerHelper {
      * 
      * @param <T>
      *            beanの型
+     * @param beanClass
+     *            beanの型
+     * @param bindings
+     *            バインディング
+     * @return bean
+     */
+    public static <T> T getBeanInstance(final Class<T> beanClass,
+            final Annotation... bindings) {
+        return WeldManagerUtils.getInstanceByType(
+            getBeanManager(),
+            beanClass,
+            bindings);
+    }
+
+    /**
+     * 指定された型のbeanを返します．
+     * 
+     * @param <T>
+     *            beanの型
      * @param beanManager
      *            {@link BeanManager}
      * @param beanClass
      *            beanの型
+     * @param bindings
+     *            バインディング
      * @return bean
      */
-    public static <T> T getBean(final BeanManager beanManager,
-            final Class<T> beanClass) {
-        return WeldManagerUtils.getInstanceByType(beanManager, beanClass);
+    public static <T> T getBeanInstance(final BeanManager beanManager,
+            final Class<T> beanClass, final Annotation... bindings) {
+        return WeldManagerUtils.getInstanceByType(
+            beanManager,
+            beanClass,
+            bindings);
     }
 
     /**

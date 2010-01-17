@@ -13,25 +13,23 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.junitcdi.jta.internal;
+package org.seasar.junitcdi.easymock;
 
-import org.jboss.weld.bootstrap.spi.Deployment;
-import org.jboss.weld.transaction.spi.TransactionServices;
-import org.seasar.junitcdi.core.internal.ServicesProvider;
+import java.util.concurrent.Callable;
+
+import javax.inject.Inject;
 
 /**
- * トランザクションサービスをCDIコンテナにデプロイします．
+ * 
  * 
  * @author koichik
  */
-public class TransactionServicesProvider implements ServicesProvider {
-    // /////////////////////////////////////////////////////////////////
-    // methods
-    //
-    @Override
-    public void registerServices(final Deployment deployment) {
-        deployment.getServices().add(
-            TransactionServices.class,
-            new TransactionServicesImpl());
+public class ConsumerBean {
+    @Inject
+    Callable<String> mock;
+
+    /** */
+    public ConsumerBean() {
+        System.out.println(toString() + " instanciating.");
     }
 }

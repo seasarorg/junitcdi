@@ -13,12 +13,11 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.junitcdi.core;
+package org.seasar.junitcdi.core.runner;
 
-import org.seasar.junitcdi.core.runner.CDI;
 
 /**
- * {@link CDI}で注釈されたテストクラスがCDIで管理されるBeanでない場合にスローされます．
+ * {@link CDI}ランナーが指定されたテストクラスがCDIで管理されるBeanでない場合にスローされます．
  * <p>
  * この例外がスローされた場合は{@literal META-INF/beans.xml}ファイルが存在するかチェックしてください．
  * Maven2のディレクトリ構成では，{@literal src/test/resources}に{@literal META-INF/beans.xml}

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>About</title>
+	</properties>
+	<body>
+		<section name="JUnit CDI Extensions for EasyMock">
+			<ul>
+				<li>
+					<a href="#Abstract">概要</a>
+				</li>
+				<li>
+					<a href="#Produces">モックオブジェクトのプロデュース</a>
+				</li>
+				<li>
+					<a href="#EasyMockController">EasyMockController</a>
+				</li>
+			</ul>
+		</section>
+
+		<section name="Abstract">
+			<p>
+				JUnit CDI Extensions for EasyMock は，テストクラスで
+				<a href="http://easymock.org/">EasyMock</a>
+				の利用をサポートします．
+			</p>
+			<p>
+				EasyMock Class Extension も利用可能です．
+				EasyMock Class Extension および
+				CGLIB の Jar ファイルがクラスパスにあれば自動的に EasyMock Class Extension が利用されます．
+			</p>
+			<p>
+				モックを作成するには，テストクラスのフィールドに
+				<code>org.seasar.junitcdi.easymock.EasyMock</code>
+				アノテーションを指定します．
+			</p>
+			<source><![CDATA[
+@RunWith(CDI.class)
+public class XxxTest {
+    @EasyMock
+    XxxService xxxService;
+    ...
+}
+]]></source>
+			<p>
+				テストクラスがCDIコンテナから構築された後 (
+				<code>@PostConstruct</code>
+				の後)，モックオブジェクトが作成されてフィールドに設定されます．
+			</p>
+			<p>
+				モックの種類を切り替えるには，
+				<code>EasyMock</code>
+				アノテーションに
+				<code>org.seasar.junitcdi.easymock.EasyMockType</code>
+				を指定します．
+			</p>
+			<source><![CDATA[
+@RunWith(CDI.class)
+public class XxxTest {
+    @EasyMock(EasyMockType.STRICT)
+    XxxDao mockDao;
+    ...
+}
+]]></source>
+			<table border="1">
+				<thead>
+					<tr>
+						<th>定数</th>
+						<th>説明</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<code>DEFAULT</code>
+						</td>
+						<td>
+							デフォルトです．
+							モックは指定されていないメソッドが呼び出されると例外をスローしますが，メソッドの呼び出し順は無視します．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>STRICT</code>
+						</td>
+						<td>
+							モックは指定されていないメソッドが呼び出されると例外をスローします．
+							指定されたメソッドであっても，指定された通りの順でメソッドが呼び出されないと例外をスローします．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>NICE</code>
+						</td>
+						<td>
+							モックは指定されていないメソッド呼び出しが行われても例外をスローしません．
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p>
+				モックの振る舞いは
+				<code>@Before</code>
+				または
+				<code>@BeforeTest</code>
+				で注釈されたメソッドで記録します．
+			</p>
+			<source><![CDATA[
+    @BeforeMethod
+    public void beforeTest() {
+        expect(mockDao.findByName(...)).andReturn(...);
+    }
+}
+]]></source>
+			<p>
+				テストメソッドでモックを利用したテストを実施します．
+			</p>
+			<source><![CDATA[
+    @Test
+    public void test() {
+        XxxService xxxService = new XxxService();
+        xxxService.xxxDao = mockDao;
+        assertThat(xxxService.xxx(...), is(...));
+    }
+}
+]]></source>
+			<p>
+				テストメソッドの実行が成功すると，モックが検証されます．
+				テストメソッドが失敗した場合はモックの検証は行われません．
+			</p>
+		</section>
+
+		<section name="Produces">
+			<p>
+				モックオブジェクト bean としてプロデュースすることができます．
+			</p>
+			<source><![CDATA[
+    @EasyMock
+    @Produces
+    XxxDao xxxDao;
+]]></source>
+			<p>
+				モックオブジェクトは，テストクラスが構築された後 (
+				<code>@PostConstruct</code>
+				の後) に作成されるため，モックオブジェクトを利用する bean を
+				<code>@Inject</code>
+				で取得することは出来ません．
+			</p>
+			<p>
+				次の例では，
+				<code>XxxService</code>
+				が作成されるのは
+				テストクラスの構築中 (
+				<code>@PostConstruct</code>
+				の前) であり，モックオブジェクトはまだ作成されていないので，
+				<code>XxxService</code>
+				に
+				<code>XxxDao</code>
+				のモックは注入されません．
+			</p>
+			<source><![CDATA[
+    @EasyMock
+    @Produces
+    XxxDao xxxDao;
+
+    @Inject
+    XxxService xxxService;
+]]></source>
+			<p>
+				このような場合には，テストメソッドや
+				<code>@Before</code>
+				メソッドまたは
+				<code>@BeforeMethod</code>
+				メソッドの中で，モックオブジェクトが DI される bean をルックアップします．
+			</p>
+			<p>
+				bean をルックアップするには，CDI 標準の
+				<code>javax.enterprise.inject.spi.BeanManager</code>
+				を DI で入手して使用するか，
+				<code>org.seasar.junitcdi.core.util.BeanLookupUtil</code>
+				を使用します．
+			</p>
+			<p>
+				次の例では，テストメソッドで
+				<code>XxxService</code>
+				がルックアップされる時点でモックオブジェクトが利用可能であるため，
+				<code>XxxDao</code>
+				が DI された
+				<code>XxxService</code>
+				を入手することができます．
+			</p>
+			<source><![CDATA[
+    @EasyMock
+    @Produces
+    XxxDao xxxDao;
+
+    @Test
+    public void test() throws Exception {
+        XxxService xxxService = BeanLookupUtil.getBeanInstance(XxxService.class);
+        ...
+    }
+]]></source>
+			<p>
+				<code>BeanLookupUtil</code>
+				の詳細は
+				<a
+					href="../junitcdi-core/apidocs/org/seasar/junitcdi/core/util/BeanLookupUtil.html">Javadoc</a>
+				を参照してください．
+			</p>
+		</section>
+
+		<section name="EasyMockController">
+			<p>
+				テストメソッドの中でモックオブジェクトを作成したり，モックオブジェクトとの記録・再生・検証を繰り返すには，
+				<code>org.seasar.junitcdi.easymock.EasyMockController</code>
+				を使用します．
+				<code>EasyMockController</code>
+				は CDI で管理される bean であるため，DI により入手することができます．
+			</p>
+			<source><![CDATA[
+    @Inject
+    EasyMockController mockController;
+
+    @Test
+    public void test() throws Exception {
+        mockController.reset();  // 記録モードに変更
+        expected(mock.xxx(...)).andReturn(...);
+        ...
+        mockController.replay(); // 再生モードに変更
+        mock.xxx();
+        ...
+        mockController.verify(); // 検証
+
+        mockController.reset(); // 記録モードに戻す
+        // 繰り返し
+        ...
+    }
+]]></source>
+			<p>
+				<code>EasyMockController</code>
+				の詳細は
+				<a href="apidocs/org/seasar/junitcdi/easymock/EasyMockController.html">Javadoc</a>
+				を参照してください．
+			</p>
+		</section>
+	</body>
+</document>

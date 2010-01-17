@@ -19,6 +19,7 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 
 import javax.enterprise.event.Event;
+import javax.enterprise.event.ObserverException;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Inject;
@@ -31,6 +32,10 @@ import org.seasar.junitcdi.core.event.TestAssumptionFailure;
 import org.seasar.junitcdi.core.event.TestFailure;
 import org.seasar.junitcdi.core.event.TestFinished;
 import org.seasar.junitcdi.core.event.TestIgnored;
+import org.seasar.junitcdi.core.event.TestInfo;
+import org.seasar.junitcdi.core.event.TestMethodFinished;
+import org.seasar.junitcdi.core.event.TestMethodStarted;
+import org.seasar.junitcdi.core.event.TestObjectObtained;
 import org.seasar.junitcdi.core.event.TestStarted;
 
 /**
@@ -54,43 +59,81 @@ public class TestEventNotifier extends RunListener {
     @Inject
     Event<Failure> failureEvent;
 
-    /**
-     * 
-     */
-    public TestEventNotifier() {
-    }
+    /** {@link TestObject}型のイベントを通知するBean */
+    @Inject
+    Event<TestInfo> testContextEvent;
 
     // /////////////////////////////////////////////////////////////////
-    // methods
+    // methods from RunListener
     //
+    /**
+     * テストが開始したことを通知します．
+     * 
+     * @param description
+     *            テストの記述
+     * @throws Exception
+     *             オブザーバーが例外をスローした場合
+     */
     @Override
     public void testStarted(final Description description) throws Exception {
-        descriptionEvent
-            .select(
+        try {
+            descriptionEvent.select(
                 getQualifiers(
                     description,
-                    new AnnotationLiteral<TestStarted>() {}))
-            .fire(description);
+                    new AnnotationLiteral<TestStarted>() {})).fire(description);
+        } catch (final ObserverException e) {
+            rethrow(e);
+        }
     }
 
+    /**
+     * テストが終了したことを通知します．
+     * 
+     * @param description
+     *            テストの記述
+     * @throws Exception
+     *             オブザーバーが例外をスローした場合
+     */
     @Override
     public void testFinished(final Description description) throws Exception {
-        descriptionEvent
-            .select(
-                getQualifiers(
-                    description,
-                    new AnnotationLiteral<TestFinished>() {}))
-            .fire(description);
+        try {
+            descriptionEvent
+                .select(
+                    getQualifiers(
+                        description,
+                        new AnnotationLiteral<TestFinished>() {}))
+                .fire(description);
+        } catch (final ObserverException e) {
+            rethrow(e);
+        }
     }
 
+    /**
+     * テストが失敗したことを通知します．
+     * 
+     * @param failure
+     *            失敗の記述
+     * @throws Exception
+     *             オブザーバーが例外をスローした場合
+     */
     @Override
     public void testFailure(final Failure failure) throws Exception {
-        failureEvent.select(
-            getQualifiers(
-                failure.getDescription(),
-                new AnnotationLiteral<TestFailure>() {})).fire(failure);
+        try {
+            failureEvent.select(
+                getQualifiers(
+                    failure.getDescription(),
+                    new AnnotationLiteral<TestFailure>() {})).fire(failure);
+        } catch (final ObserverException e) {
+            rethrow(e);
+        }
     }
 
+    /**
+     * テストの前提が満たされていなかったことを通知します．
+     * 
+     * @param failure
+     *            失敗の記述
+     */
     @Override
     public void testAssumptionFailure(final Failure failure) {
         failureEvent.select(
@@ -100,14 +143,87 @@ public class TestEventNotifier extends RunListener {
             failure);
     }
 
+    /**
+     * テストが無視したことを通知します．
+     * 
+     * @param description
+     *            テストの記述
+     * @throws Exception
+     *             オブザーバーが例外をスローした場合
+     */
     @Override
     public void testIgnored(final Description description) throws Exception {
-        descriptionEvent
-            .select(
+        try {
+            descriptionEvent.select(
                 getQualifiers(
                     description,
-                    new AnnotationLiteral<TestIgnored>() {}))
-            .fire(description);
+                    new AnnotationLiteral<TestIgnored>() {})).fire(description);
+        } catch (final ObserverException e) {
+            rethrow(e);
+        }
+    }
+
+    // /////////////////////////////////////////////////////////////////
+    // methods
+    //
+    /**
+     * テストオブジェクトがCDIコンテナから取得されたことを通知します．
+     * 
+     * @param testInfo
+     *            テストの情報
+     * @throws Exception
+     *             オブザーバーが例外をスローした場合
+     */
+    public void testObjectObtained(final TestInfo testInfo) throws Exception {
+        try {
+            testContextEvent.select(
+                getQualifiers(
+                    testInfo.getDescription(),
+                    new AnnotationLiteral<TestObjectObtained>() {})).fire(
+                testInfo);
+        } catch (final ObserverException e) {
+            rethrow(e);
+        }
+    }
+
+    /**
+     * テストメソッドの実行が開始されることを通知します．
+     * 
+     * @param testInfo
+     *            テストの情報
+     * @throws Exception
+     *             オブザーバーが例外をスローした場合
+     */
+    public void testMethodStarted(final TestInfo testInfo) throws Exception {
+        try {
+            testContextEvent.select(
+                getQualifiers(
+                    testInfo.getDescription(),
+                    new AnnotationLiteral<TestMethodStarted>() {})).fire(
+                testInfo);
+        } catch (final ObserverException e) {
+            rethrow(e);
+        }
+    }
+
+    /**
+     * テストメソッドの実行が終了したことを通知します．
+     * 
+     * @param testInfo
+     *            テストの情報
+     * @throws Exception
+     *             オブザーバーが例外をスローした場合
+     */
+    public void testMethodFinished(final TestInfo testInfo) throws Exception {
+        try {
+            testContextEvent.select(
+                getQualifiers(
+                    testInfo.getDescription(),
+                    new AnnotationLiteral<TestMethodFinished>() {})).fire(
+                testInfo);
+        } catch (final ObserverException e) {
+            rethrow(e);
+        }
     }
 
     /**
@@ -132,5 +248,23 @@ public class TestEventNotifier extends RunListener {
             }
         }
         return annotations.toArray(new Annotation[annotations.size()]);
+    }
+
+    /**
+     * オブザーバーがスローした例外をスローします．
+     * 
+     * @param e
+     *            オブザーバーがスローした例外をラップした例外
+     * @throws Exception
+     *             オブザーバーがスローした例外
+     */
+    protected void rethrow(final ObserverException e) throws Exception {
+        Throwable t = e.getCause();
+        if (t instanceof Exception) {
+            throw (Exception) e.getCause();
+        } else if (t instanceof Error) {
+            throw (Error) t;
+        }
+        throw e;
     }
 }

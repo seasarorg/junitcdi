@@ -49,6 +49,17 @@
 							<a href="junitcdi-jta/apidocs/index.html">Javadoc</a>
 						</td>
 					</tr>
+					<tr>
+						<td>
+							<a href="junitcdi-easymock/index.html">EasyMock</a>
+						</td>
+						<td>
+							テストクラスで EasyMock の利用をサポートします．
+						</td>
+						<td>
+							<a href="junitcdi-easymock/apidocs/index.html">Javadoc</a>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</section>

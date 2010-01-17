@@ -11,6 +11,7 @@
 	<modules>
 		<module>junitcdi-core</module>
 		<module>junitcdi-jta</module>
+		<module>junitcdi-easymock</module>
 	</modules>
 	<!-- More Project Information -->
 	<name>JUnit CDI Extensions Project</name>
@@ -149,7 +150,12 @@
 						<link>http://java.sun.com/javase/ja/6/docs/ja/api/</link>
 						<link>http://java.sun.com/javaee/6/docs/api/</link>
 						<link>http://www.junit.org/junit/javadoc/4.5/</link>
+						<link>http://easymock.org/api/easymock/2.5.2/index.html</link>
+						<link>http://easymock.org/api/easymockclassextension/2.5.2/index.html</link>
 					</links>
+					<!--
+						<excludePackageNames>*.internal.*</excludePackageNames>
+					-->
 				</configuration>
 				<executions>
 					<execution>

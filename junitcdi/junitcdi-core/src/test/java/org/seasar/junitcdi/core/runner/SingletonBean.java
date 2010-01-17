@@ -21,7 +21,11 @@ import javax.enterprise.event.Observes;
 import javax.inject.Singleton;
 
 import org.junit.runner.Description;
+import org.seasar.junitcdi.core.event.TestInfo;
 import org.seasar.junitcdi.core.event.TestFinished;
+import org.seasar.junitcdi.core.event.TestMethodFinished;
+import org.seasar.junitcdi.core.event.TestMethodStarted;
+import org.seasar.junitcdi.core.event.TestObjectObtained;
 import org.seasar.junitcdi.core.event.TestStarted;
 
 /**
@@ -80,5 +84,32 @@ public class SingletonBean {
             @Observes @TestFinished @Foo final Description description) {
         System.out.println(toString() + " test @foo finished. "
             + description.getDisplayName());
+    }
+
+    /**
+     * @param testContext
+     */
+    public void onTestObjectObtained(
+            @Observes @TestObjectObtained final TestInfo testContext) {
+        System.out.println(toString() + " test object obtained. "
+            + testContext.getInstance());
+    }
+
+    /**
+     * @param testContext
+     */
+    public void onTestMethodStarted(
+            @Observes @TestMethodStarted final TestInfo testContext) {
+        System.out.println(toString() + " test method started. "
+            + testContext.getMethod().getName());
+    }
+
+    /**
+     * @param testContext
+     */
+    public void onTestMethodFinished(
+            @Observes @TestMethodFinished final TestInfo testContext) {
+        System.out.println(toString() + " test method finished. "
+            + testContext.getMethod().getName());
     }
 }

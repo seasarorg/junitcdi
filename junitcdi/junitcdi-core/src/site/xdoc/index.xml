@@ -345,6 +345,40 @@ public class XxxBean {
 				はサポートされません．
 			</p>
 			<p>
+				JUnit CDI Extensions 独自のイベントもあります．
+				引数の型はいずれも
+				<code>org.seasar.junitcdi.core.event.TestInfo</code>
+				です．
+			</p>
+			<table border="1">
+				<thead>
+					<tr>
+						<th>アノテーション</th>
+						<th>イベントが発生するタイミング</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<code>org.seasar.junitcdi.core.event.TestObjectObtained</code>
+						</td>
+						<td>テストクラスのインスタンスがCDIコンテナから取得された直後．</td>
+					</tr>
+					<tr>
+						<td>
+							<code>org.seasar.junitcdi.core.event.TestMethodStarted</code>
+						</td>
+						<td>テストメソッドが呼び出される直前</td>
+					</tr>
+					<tr>
+						<td>
+							<code>org.seasar.junitcdi.core.event.TestMethodFinished</code>
+						</td>
+						<td>テストメソッドが呼び出された直後</td>
+					</tr>
+				</tbody>
+			</table>
+			<p>
 				テストメソッドに
 				<code>Qualifier</code>
 				が指定されると，それがイベントにも反映されます．
@@ -354,7 +388,7 @@ public class XxxBean {
 				<code>hoge()</code>
 				メソッドのように
 				<code>@Hoge</code>
-				で注釈されたテストメソッドが実行される前だけ
+				で注釈されたテストが実行される前にだけ
 				<code>onHogeStarted()</code>
 				メソッドが呼び出されます．
 			</p>
@@ -382,6 +416,115 @@ public class XxxBean {
     ...
 }
 ]]></source>
+			<p>
+				テストが正常に実行される際の，ライフサイクルメソッドと CDI イベントが発生する順序関係は以下のようになります．
+			</p>
+			<table border="1">
+				<thead>
+					<tr>
+						<th>ライフサイクルメソッド</th>
+						<th>CDIイベント</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<code>@BeforeClass</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code>@TestStarted</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code>@TestObjectObtained</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>@Before</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>@BeforeMethod</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code>@TestMethodStarted</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>@Test</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code>@TestMethodFinished</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>@AfterMethod</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>@After</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code>@TestFinished</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>@AfterClass</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 		</section>
 	</body>
 </document>
