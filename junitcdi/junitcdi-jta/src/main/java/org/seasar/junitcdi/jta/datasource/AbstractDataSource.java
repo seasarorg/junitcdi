@@ -77,7 +77,7 @@ import org.seasar.extension.dbcp.impl.XADataSourceImpl;
  * <tr>
  * <td>
  * <code>name</code></td>
- * <td>データソースをJNDIに登録する名前です (未実装)．</td>
+ * <td>データソースをJNDIに登録する名前です．</td>
  * </tr>
  * <tr>
  * <td>
@@ -160,11 +160,11 @@ public abstract class AbstractDataSource implements DataSource {
     /**
      * コネクションプールをオープンします．
      * 
-     * @throws SQLException
-     *             SQL例外が発生した場合
+     * @throws Exception
+     *             例外が発生した場合
      */
     @PostConstruct
-    public void open() throws SQLException {
+    public void open() throws Exception {
         final DataSourceDefinition definition =
             getClass().getAnnotation(DataSourceDefinition.class);
         final ConnectionPoolImpl pool = new ConnectionPoolImpl();

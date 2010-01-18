@@ -86,7 +86,7 @@ public class DefaultDataSource extends AbstractDataSource {
 						<td>
 							<code>name</code>
 						</td>
-						<td>データソースを JNDI に登録する名前です (未実装)．</td>
+						<td>データソースを JNDI に登録する名前です．</td>
 					</tr>
 					<tr>
 						<td>

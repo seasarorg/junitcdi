@@ -15,11 +15,14 @@
  */
 package org.seasar.junitcdi.jta.datasource;
 
+import javax.annotation.sql.DataSourceDefinition;
+
 /**
  * {@link Hoge}で注釈された非デフォルトのデータソースです．
  * 
  * @author koichik
  */
 @Hoge
+@DataSourceDefinition(name = "java:comp/env/jdbc/HogeDataSource", className = "org.h2.Driver", url = "jdbc:h2:mem:hoge")
 public class HogeDataSource extends AbstractDataSource {
 }

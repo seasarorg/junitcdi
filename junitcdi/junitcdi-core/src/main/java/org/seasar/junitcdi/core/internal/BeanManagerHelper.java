@@ -18,6 +18,8 @@ package org.seasar.junitcdi.core.internal;
 import java.lang.annotation.Annotation;
 import java.util.ServiceLoader;
 
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
 import org.jboss.weld.bootstrap.WeldBootstrap;
@@ -34,6 +36,7 @@ import org.jboss.weld.environment.se.ShutdownManager;
 import org.jboss.weld.environment.se.discovery.SEWeldDeployment;
 import org.jboss.weld.environment.se.events.ContainerInitialized;
 import org.jboss.weld.environment.se.util.WeldManagerUtils;
+import org.jboss.weld.injection.spi.ResourceInjectionServices;
 
 /**
  * CDIコンテナ({@link BeanManager})の作成などを行うヘルパークラスです．
@@ -50,21 +53,11 @@ public class BeanManagerHelper {
     //
     /** スレッド固有の{@link BeanManager} */
     protected static final ThreadLocal<BeanManager> beanManagers =
-        new InheritableThreadLocal<BeanManager>() {
-            @Override
-            protected BeanManager initialValue() {
-                return createBeanManager(deployments.get());
-            }
-        };
+        new InheritableThreadLocal<BeanManager>();
 
     /** スレッド固有のデプロイメント */
     protected static final ThreadLocal<Deployment> deployments =
-        new InheritableThreadLocal<Deployment>() {
-            @Override
-            protected Deployment initialValue() {
-                return new SEWeldDeployment() {};
-            }
-        };
+        new InheritableThreadLocal<Deployment>();
 
     /** テストクラスコンテキスト */
     protected static final TestClassContext testClassContext =
@@ -74,22 +67,27 @@ public class BeanManagerHelper {
     // methods
     //
     /**
+     * スレッド固有のCDIコンテナを返します．
+     * 
+     * @return スレッド固有のCDIコンテナ
+     */
+    public static BeanManager getBeanManager() {
+        final BeanManager beanManager = beanManagers.get();
+        return beanManager != null ? beanManager : createBeanManager();
+    }
+
+    /**
      * CDIコンテナを作成します．
      * 
      * @return CDIコンテナ
      */
-    public static BeanManager createBeanManager() {
-        return createBeanManager(new SEWeldDeployment() {});
-    }
+    protected static BeanManager createBeanManager() {
+        final Deployment deployment = new SEWeldDeployment() {};
+        deployments.set(deployment);
 
-    /**
-     * スレッド固有のCDIコンテナを作成します．
-     * 
-     * @param deployment
-     *            デプロイメント
-     * @return CDIコンテナ
-     */
-    protected static BeanManager createBeanManager(final Deployment deployment) {
+        deployment.getServices().add(
+            ResourceInjectionServices.class,
+            new ResourceInjectionServicesImpl());
         for (final ServicesProvider provider : ServiceLoader
             .load(ServicesProvider.class)) {
             provider.registerServices(deployment);
@@ -102,6 +100,8 @@ public class BeanManagerHelper {
         final BeanDeploymentArchive mainBeanDepArch =
             deployment.getBeanDeploymentArchives().iterator().next();
         final BeanManager beanManager = bootstrap.getManager(mainBeanDepArch);
+        beanManagers.set(beanManager);
+
         bootstrap.startInitialization();
         bootstrap.deployBeans();
         WeldManagerUtils
@@ -111,15 +111,6 @@ public class BeanManagerHelper {
         bootstrap.endInitialization();
         beanManager.fireEvent(new ContainerInitialized());
         return beanManager;
-    }
-
-    /**
-     * スレッド固有のCDIコンテナを返します．
-     * 
-     * @return スレッド固有のCDIコンテナ
-     */
-    public static BeanManager getBeanManager() {
-        return beanManagers.get();
     }
 
     /**
@@ -160,6 +151,40 @@ public class BeanManagerHelper {
             beanManager,
             beanClass,
             bindings);
+    }
+
+    /**
+     * 指定された名前のbeanを返します．
+     * 
+     * @param name
+     *            beanの名前
+     * @return bean
+     */
+    public static Object getBeanInstance(final String name) {
+        return getBeanInstance(getBeanManager(), name);
+    }
+
+    /**
+     * 指定された名前のbeanを返します．
+     * 
+     * @param <T>
+     *            beanの型
+     * @param beanManager
+     *            {@link BeanManager}
+     * @param name
+     *            beanの名前
+     * @return bean
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getBeanInstance(final BeanManager beanManager,
+            final String name) {
+        final Bean<T> bean =
+            (Bean<T>) beanManager.getBeans(name).iterator().next();
+        final CreationalContext<T> cc =
+            beanManager.createCreationalContext(bean);
+        final T instance =
+            (T) beanManager.getReference(bean, bean.getBeanClass(), cc);
+        return instance;
     }
 
     /**

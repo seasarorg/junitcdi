@@ -346,7 +346,7 @@ public class XxxBean {
 			</p>
 			<p>
 				JUnit CDI Extensions 独自のイベントもあります．
-				引数の型はいずれも
+				イベントの型はいずれも
 				<code>org.seasar.junitcdi.core.event.TestInfo</code>
 				です．
 			</p>
@@ -379,6 +379,19 @@ public class XxxBean {
 				</tbody>
 			</table>
 			<p>
+				以下の例では，テストクラスのインスタンスが CDI コンテナから取得された直後に
+				<code>onTestObjectObtained()</code>
+				メソッドが呼び出されます．
+			</p>
+			<source><![CDATA[
+public class XxxBean {
+    public void onTestObjectObtained(@Observes @TestObjectObtained TestInfo testInfo) {
+        ...
+    }
+    ...
+}
+]]></source>
+			<p>
 				テストメソッドに
 				<code>Qualifier</code>
 				が指定されると，それがイベントにも反映されます．
@@ -389,6 +402,8 @@ public class XxxBean {
 				メソッドのように
 				<code>@Hoge</code>
 				で注釈されたテストが実行される前にだけ
+				<code>XxxBean</code>
+				クラスの
 				<code>onHogeStarted()</code>
 				メソッドが呼び出されます．
 			</p>

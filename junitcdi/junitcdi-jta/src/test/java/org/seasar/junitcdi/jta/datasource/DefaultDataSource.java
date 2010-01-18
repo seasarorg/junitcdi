@@ -23,6 +23,6 @@ import javax.sql.DataSource;
  * 
  * @author koichik
  */
-@DataSourceDefinition(name = "default", className = "org.h2.Driver", url = "jdbc:h2:mem:default")
+@DataSourceDefinition(name = "java:comp/env/jdbc/DefaultDataSource", className = "org.h2.Driver", url = "jdbc:h2:mem:default")
 public class DefaultDataSource extends AbstractDataSource {
 }

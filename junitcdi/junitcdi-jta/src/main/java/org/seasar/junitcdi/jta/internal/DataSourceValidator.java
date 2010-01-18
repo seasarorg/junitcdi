@@ -23,13 +23,17 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.util.AnnotationLiteral;
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
+import org.seasar.junitcdi.core.internal.JndiContextFactory;
 import org.seasar.junitcdi.jta.datasource.AbstractDataSource;
 import org.seasar.junitcdi.jta.datasource.DataSourceDefinitionNotSpecifiedException;
 
 /**
- * {@link AbstractDataSource}のサブクラスに{@link DataSourceDefinition}
- * が注釈されていることを検証します．
+ * {@link AbstractDataSource}のサブクラスに{@link DataSourceDefinition} が注釈されていることを検証し，
+ * {@link DataSource}をJNDIに登録します．
  * 
  * @author koichik
  */
@@ -48,11 +52,14 @@ public class DataSourceValidator implements Extension {
      * @throws DataSourceDefinitionNotSpecifiedException
      *             {@link AbstractDataSource}に{@link DataSourceDefinition}
      *             が注釈されていない場合
+     * @throws NamingException
+     *             JNDIの登録に失敗した場合
      */
     public void afterDeploymentValidation(
             @Observes final AfterDeploymentValidation event,
             final BeanManager beanManager)
-            throws DataSourceDefinitionNotSpecifiedException {
+            throws DataSourceDefinitionNotSpecifiedException, NamingException {
+        final Context jndiContext = JndiContextFactory.getContext();
         for (final Bean<?> bean : beanManager.getBeans(
             AbstractDataSource.class,
             new AnnotationLiteral<Any>() {})) {
@@ -61,8 +68,15 @@ public class DataSourceValidator implements Extension {
                 event
                     .addDeploymentProblem(new DataSourceDefinitionNotSpecifiedException(
                         beanClass));
-                // addDeploymentProblem() しても無視されるのでやむを得ず．
+                // addDeploymentProblem() しても無視される ([WELD-306]) のでやむを得ず．
+                // Weld 1.0.1.CR1が出たら戻す
                 throw new DataSourceDefinitionNotSpecifiedException(beanClass);
+            }
+            final DataSourceDefinition definition =
+                beanClass.getAnnotation(DataSourceDefinition.class);
+            final String name = definition.name();
+            if (!name.isEmpty()) {
+                jndiContext.bind(definition.name(), bean);
             }
         }
     }
