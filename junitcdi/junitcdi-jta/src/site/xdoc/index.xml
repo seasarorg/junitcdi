@@ -56,9 +56,9 @@ public class XxxTest {
 			</p>
 			<source><![CDATA[
 @DataSourceDefinition(
-    name = "...", 
-    className = "...", 
-    url = "...",
+    name = "java:comp/env/jdbc/DefaultDataSource", 
+    className = "org.h2.Driver", 
+    url = "jdbc:h2:mem:default",
     user = "...",
     password = "...")
 public class DefaultDataSource extends AbstractDataSource {
@@ -71,6 +71,16 @@ public class DefaultDataSource extends AbstractDataSource {
     @Inject
     DataSource ds;
 ]]></source>
+			<p>
+				あるいは，
+				<code>@Resource</code>
+				で DI することも，JNDI からルックアップすることも可能です．
+				詳細は
+				<a href="../junitcdi-core/">JUnit CDI Extensions Core</a>
+				の
+				<a href="../junitcdi-core/index.html#JNDI">JNDI</a>
+				を参照してください．
+			</p>
 			<p>
 				接続情報は以下のように指定します．
 			</p>
@@ -155,7 +165,7 @@ public class HogeDataSource extends AbstractDataSource {
 			<p>
 				データソースのスコープは
 				<code>ApplicationScoped</code>
-				であり，スコープが破棄される際に自動的にクローズされます．
+				であり，テストメソッドが終了してスコープが破棄される際に自動的にクローズされます．
 			</p>
 		</section>
 

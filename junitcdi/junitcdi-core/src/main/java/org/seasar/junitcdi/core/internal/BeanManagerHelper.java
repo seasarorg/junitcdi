@@ -156,12 +156,15 @@ public class BeanManagerHelper {
     /**
      * 指定された名前のbeanを返します．
      * 
+     * @param <T>
+     *            beanの型
      * @param name
      *            beanの名前
      * @return bean
      */
-    public static Object getBeanInstance(final String name) {
-        return getBeanInstance(getBeanManager(), name);
+    @SuppressWarnings("unchecked")
+    public static <T> T getBeanInstance(final String name) {
+        return (T) getBeanInstance(getBeanManager(), name);
     }
 
     /**

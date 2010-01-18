@@ -16,6 +16,7 @@
 package org.seasar.junitcdi.jta;
 
 import javax.annotation.Resource;
+import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.UserTransaction;
@@ -49,5 +50,9 @@ public class JndiTest {
         assertThat(ut, notNullValue());
         assertThat(tsr, notNullValue());
         assertThat(ds, is(notNullValue()));
+
+        UserTransaction ut3 =
+            InitialContext.doLookup("java:comp/UserTransaction");
+        assertThat(ut3, is(notNullValue()));
     }
 }

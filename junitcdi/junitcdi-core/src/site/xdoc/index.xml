@@ -30,6 +30,9 @@
 				<li>
 					<a href="#Events">イベント</a>
 				</li>
+				<li>
+					<a href="#JNDI">JNDI</a>
+				</li>
 			</ul>
 		</section>
 
@@ -540,6 +543,50 @@ public class XxxBean {
 					</tr>
 				</tbody>
 			</table>
+		</section>
+
+		<section name="JNDI">
+			<p>
+				JUnit CDI Extensions は，JNDI 経由で CDI コンテナから bean をルックアップする
+				<code>javax.naming.Context</code>
+				を提供します．
+			</p>
+			<p>
+				これにより，JNDI でルックアップされるコンポーネントや
+				<code>@Resource</code>
+				アノテーションで DI されるコンポーネントを bean として用意しておくこくことができます．
+			</p>
+			<p>
+				この JNDI
+				<code>Context</code>
+				を利用するには，クラスパスに
+				<code>jndi.properties</code>
+				ファイルを作成して以下の内容を記述します．
+			</p>
+			<source><![CDATA[
+java.naming.factory.initial=org.seasar.junitcdi.core.internal.JndiContextFactory
+]]></source>
+			<p>
+				これで
+				<code>InitialContext</code>
+				を利用して CDI コンテナから bean をルックアップすることができます．
+			</p>
+			<source><![CDATA[
+DataSource ds = InitialContext.doLookup("java:comp/env/jdbc/DataSource");
+]]></source>
+			<p>
+				あるいは，上記の内容をもった
+				<code>Hashtable</code>
+				を作成して
+				<code>InitialContext</code>
+				を作成します．
+				<source><![CDATA[
+Hashtable<Object, Object> env = new Hashtable<Object, Object>();
+env.put(Context.INITIAL_CONTEXT_FACTORY, "org.seasar.junitcdi.core.internal.JndiContextFactory");
+Context ctx = new InitialContext(env);
+DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/DataSource");
+]]></source>
+			</p>
 		</section>
 	</body>
 </document>
