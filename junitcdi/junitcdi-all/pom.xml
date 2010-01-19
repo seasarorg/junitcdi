@@ -1,0 +1,98 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- The Basics -->
+	<artifactId>junitcdi-all</artifactId>
+	<packaging>jar</packaging>
+	<parent>
+		<groupId>org.seasar.junitcdi</groupId>
+		<artifactId>junitcdi-project</artifactId>
+		<version>0.0.0-SNAPSHOT</version>
+	</parent>
+
+	<!-- More Project Information -->
+	<name>JUnit CDI Extensions All in One Jar Project</name>
+	<description>JUnit CDI Extensions All in One Jar Project</description>
+
+	<!-- Build Settings -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- Dependency Settings -->
+	<dependencies>
+		<dependency>
+			<groupId>org.seasar.junitcdi</groupId>
+			<artifactId>junitcdi-core</artifactId>
+			<version>${version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jboss.weld</groupId>
+					<artifactId>weld-se</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jboss.weld</groupId>
+					<artifactId>weld-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.seasar.junitcdi</groupId>
+			<artifactId>junitcdi-easymock</artifactId>
+			<version>${version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.easymock</groupId>
+					<artifactId>easymockclassextension</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.seasar.junitcdi</groupId>
+			<artifactId>junitcdi-jta</artifactId>
+			<version>${version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.seasar.junitcdi</groupId>
+					<artifactId>s2jta</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.transaction</groupId>
+					<artifactId>jta</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.glassfish</groupId>
+					<artifactId>javax.annotation</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>jcl-over-slf4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+</project>

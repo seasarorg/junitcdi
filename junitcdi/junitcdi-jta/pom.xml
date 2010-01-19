@@ -31,6 +31,21 @@
 			<version>${version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.seasar.junitcdi</groupId>
+			<artifactId>s2jta</artifactId>
+			<version>2.4.40</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>org.seasar.container</artifactId>
+					<groupId>s2-framework</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>org.seasar.container</artifactId>
+					<groupId>s2-extension</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
 			<groupId>javax.transaction</groupId>
 			<artifactId>jta</artifactId>
 			<version>1.1</version>
@@ -39,45 +54,6 @@
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.annotation</artifactId>
 			<version>3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.seasar.container</groupId>
-			<artifactId>s2-extension</artifactId>
-			<version>2.4.40</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.poi</groupId>
-					<artifactId>poi</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.seasar.container</groupId>
-			<artifactId>s2-framework</artifactId>
-			<version>2.4.40</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>aopalliance</artifactId>
-					<groupId>aopalliance</groupId>
-				</exclusion>
-				<exclusion>
-					<groupId>jboss</groupId>
-					<artifactId>javassist</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>ognl</artifactId>
-					<groupId>ognl</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>junit</artifactId>
-					<groupId>junit</groupId>
-				</exclusion>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

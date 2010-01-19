@@ -26,12 +26,6 @@
 				を利用できるようにします．
 			</p>
 			<p>
-				JTA およびコネクションプールの実装には，
-				<a href="http://s2container.seasar.org/2.4/ja/">Seasar2</a>
-				の提供する S2JTA と S2DBCP を使用します．ただし，DI コンテナとしての Seasar2 (S2Container)
-				は使用しません．
-			</p>
-			<p>
 				テストクラスを含む任意の bean で
 				<code>javax.transaction.UserTransaction</code>
 				を DI して利用することが出来ます．
@@ -44,6 +38,17 @@ public class XxxTest {
     ...
 }
 ]]></source>
+			<p>
+				JTA およびコネクションプールの実装には，
+				<a href="http://s2container.seasar.org/2.4/ja/">Seasar2</a>
+				の提供する S2JTA と S2DBCP を使用します．ただし，DI コンテナとしての Seasar2 (S2Container)
+				は使用しません．
+			</p>
+			<p>
+				S2JTA と S2JDBC を利用するには，Seasar2 の Jar ファイル (s2-framework-2.4.xx.jar
+				および s2-extension-2.4.xx.jar) をそのまま利用することも，S2JTA と S2DBCP
+				に必要なパッケージだけをまとめた s2jta-2.4.xx.jar を利用することもできます．
+			</p>
 		</section>
 
 		<section name="DataSource">

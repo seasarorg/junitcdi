@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- The Basics -->
+	<artifactId>junitcdi-dist</artifactId>
+	<packaging>jar</packaging>
+	<parent>
+		<groupId>org.seasar.junitcdi</groupId>
+		<artifactId>junitcdi-project</artifactId>
+		<version>0.0.0-SNAPSHOT</version>
+	</parent>
+
+	<!-- More Project Information -->
+	<name>JUnit CDI Extensions Distribution</name>
+	<description>JUnit CDI Extensions Distribution Project</description>
+
+	<!-- Build Settings -->
+	<build>
+		<defaultGoal>validate</defaultGoal>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>zip</id>
+						<phase>site</phase>
+						<configuration>
+							<tasks>
+								<tstamp>
+									<format property="releaseDate" pattern="yyyy-MM-dd"
+										locale="ja,JP" />
+								</tstamp>
+								<property name="zipDir" value="target/site/${releaseDate}" />
+								<mkdir dir="${zipDir}" />
+								<zip zipfile="${zipDir}/JUnitCDI-${version}.zip">
+									<zipfileset prefix="junitcdi" dir="..">
+										<exclude name="**/bin**" />
+										<exclude name="**/target/**" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/lib" dir="../junitcdi-core/target">
+										<include name="junitcdi-core-${version}.jar" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/lib" dir="../junitcdi-jta/target">
+										<include name="junitcdi-jta-${version}.jar" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/lib" dir="../junitcdi-easymock/target">
+										<include name="junitcdi-easymock-${version}.jar" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/lib" dir="../junitcdi-all/target">
+										<include name="junitcdi-all-${version}.jar" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/lib" dir="../s2jta/target">
+										<include name="s2jta-${version}.jar" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/libsrc" dir="../junitcdi-core/target">
+										<include name="junitcdi-core-${version}-sources.jar" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/libsrc" dir="../junitcdi-jta/target">
+										<include name="junitcdi-jta-${version}-sources.jar" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/libsrc" dir="../junitcdi-easymock/target">
+										<include name="junitcdi-easymock-${version}-sources.jar" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/libsrc" dir="../s2jta/target">
+										<include name="s2jta-${version}-sources.jar" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/docs" dir="../target/site" />
+									<zipfileset prefix="junitcdi/docs/junitcdi-core"
+										dir="../junitcdi-core/target/site" />
+									<zipfileset prefix="junitcdi/docs/junitcdi-jta" dir="../junitcdi-jta/target/site" />
+									<zipfileset prefix="junitcdi/docs/junitcdi-easymock"
+										dir="../junitcdi-easymock/target/site" />
+								</zip>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -10,12 +10,15 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>junitcdi-core</module>
-		<module>junitcdi-jta</module>
 		<module>junitcdi-easymock</module>
+		<module>s2jta</module>
+		<module>junitcdi-jta</module>
+		<module>junitcdi-all</module>
+		<module>junitcdi-dist</module>
 	</modules>
 	<!-- More Project Information -->
 	<name>JUnit CDI Extensions Project</name>
-	<description></description>
+	<description>JUnit CDI Extensions Project</description>
 	<url>http://junitcdi.sandbox.seasar.org/</url>
 	<inceptionYear>2010</inceptionYear>
 	<licenses>
