@@ -31,17 +31,40 @@
 			<version>${version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.seasar.junitcdi</groupId>
-			<artifactId>s2jta</artifactId>
+			<groupId>org.seasar.container</groupId>
+			<artifactId>s2-framework</artifactId>
 			<version>2.4.40</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>org.seasar.container</artifactId>
-					<groupId>s2-framework</groupId>
+					<artifactId>aopalliance</artifactId>
+					<groupId>aopalliance</groupId>
 				</exclusion>
 				<exclusion>
-					<artifactId>org.seasar.container</artifactId>
-					<groupId>s2-extension</groupId>
+					<groupId>jboss</groupId>
+					<artifactId>javassist</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>ognl</artifactId>
+					<groupId>ognl</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>junit</artifactId>
+					<groupId>junit</groupId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.seasar.container</groupId>
+			<artifactId>s2-extension</artifactId>
+			<version>2.4.40</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.poi</groupId>
+					<artifactId>poi</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -59,7 +82,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>1.5.9.RC1</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>

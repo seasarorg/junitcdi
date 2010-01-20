@@ -11,9 +11,7 @@
 	<modules>
 		<module>junitcdi-core</module>
 		<module>junitcdi-easymock</module>
-		<module>s2jta</module>
 		<module>junitcdi-jta</module>
-		<module>junitcdi-all</module>
 		<module>junitcdi-dist</module>
 	</modules>
 	<!-- More Project Information -->

@@ -4,14 +4,14 @@
 	<classpathentry kind="src" path="junitcdi-core/src/main/resources"/>
 	<classpathentry kind="src" output="junitcdi-core/target/test-classes" path="junitcdi-core/src/test/java"/>
 	<classpathentry kind="src" output="junitcdi-core/target/test-classes" path="junitcdi-core/src/test/resources"/>
-	<classpathentry kind="src" output="junitcdi-jta/target/classes" path="junitcdi-jta/src/main/java"/>
-	<classpathentry kind="src" output="junitcdi-jta/target/classes" path="junitcdi-jta/src/main/resources"/>
-	<classpathentry kind="src" output="junitcdi-jta/target/test-classes" path="junitcdi-jta/src/test/java"/>
-	<classpathentry kind="src" output="junitcdi-jta/target/test-classes" path="junitcdi-jta/src/test/resources"/>
 	<classpathentry kind="src" output="junitcdi-easymock/target/classes" path="junitcdi-easymock/src/main/java"/>
 	<classpathentry kind="src" output="junitcdi-easymock/target/classes" path="junitcdi-easymock/src/main/resources"/>
 	<classpathentry kind="src" output="junitcdi-easymock/target/test-classes" path="junitcdi-easymock/src/test/java"/>
 	<classpathentry kind="src" output="junitcdi-easymock/target/test-classes" path="junitcdi-easymock/src/test/resources"/>
+	<classpathentry kind="src" output="junitcdi-jta/target/classes" path="junitcdi-jta/src/main/java"/>
+	<classpathentry kind="src" output="junitcdi-jta/target/classes" path="junitcdi-jta/src/main/resources"/>
+	<classpathentry kind="src" output="junitcdi-jta/target/test-classes" path="junitcdi-jta/src/test/java"/>
+	<classpathentry kind="src" output="junitcdi-jta/target/test-classes" path="junitcdi-jta/src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-core/lib/junit-4.5.jar" sourcepath="junitcdi-core/libsrc/junit-4.5-src.jar"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-core/lib/cal10n-api-0.7.2.jar"/>
@@ -31,15 +31,15 @@
 	<classpathentry exported="true" kind="lib" path="junitcdi-core/lib/weld-core-1.0.0.jar" sourcepath="junitcdi-core/libsrc/weld-core-1.0.0-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-core/lib/weld-se-1.0.0-CR2.jar" sourcepath="junitcdi-core/libsrc/weld-se-1.0.0-CR2-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-core/lib/weld-spi-1.0.jar" sourcepath="junitcdi-core/libsrc/weld-spi-1.0-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="junitcdi-jta/lib/h2-1.2.126.jar"/>
-	<classpathentry exported="true" kind="lib" path="junitcdi-jta/lib/javax.annotation-3.0.jar" sourcepath="junitcdi-jta/libsrc/javax.annotation-3.0-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="junitcdi-jta/lib/jcl-over-slf4j-1.5.9.RC1.jar"/>
-	<classpathentry exported="true" kind="lib" path="junitcdi-jta/lib/jta-1.1.jar" sourcepath="junitcdi-jta/libsrc/jta-1.1-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-easymock/lib/cglib-nodep-2.2.jar" sourcepath="junitcdi-easymock/libsrc/cglib-nodep-2.2-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-easymock/lib/easymock-2.5.2.jar" sourcepath="junitcdi-easymock/libsrc/easymock-2.5.2-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-easymock/lib/easymockclassextension-2.5.2.jar" sourcepath="junitcdi-easymock/libsrc/easymockclassextension-2.5.2-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-easymock/lib/objenesis-1.2.jar" sourcepath="junitcdi-easymock/libsrc/objenesis-1.2-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="s2jta/lib/s2-extension-2.4.40.jar" sourcepath="s2jta/libsrc/s2-extension-2.4.40-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="s2jta/lib/s2-framework-2.4.40.jar" sourcepath="s2jta/libsrc/s2-framework-2.4.40-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="junitcdi-jta/lib/h2-1.2.126.jar"/>
+	<classpathentry exported="true" kind="lib" path="junitcdi-jta/lib/javax.annotation-3.0.jar" sourcepath="junitcdi-jta/libsrc/javax.annotation-3.0-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="junitcdi-jta/lib/jcl-over-slf4j-1.5.9.RC1.jar"/>
+	<classpathentry exported="true" kind="lib" path="junitcdi-jta/lib/jta-1.1.jar" sourcepath="junitcdi-jta/libsrc/jta-1.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="junitcdi-jta/lib/s2-extension-2.4.40.jar" sourcepath="junitcdi-jta/libsrc/s2-extension-2.4.40-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="junitcdi-jta/lib/s2-framework-2.4.40.jar" sourcepath="junitcdi-jta/libsrc/s2-framework-2.4.40-sources.jar"/>
 	<classpathentry kind="output" path="junitcdi-core/target/classes"/>
 </classpath>

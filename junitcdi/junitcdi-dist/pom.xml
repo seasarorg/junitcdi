@@ -42,29 +42,20 @@
 									<zipfileset prefix="junitcdi/lib" dir="../junitcdi-core/target">
 										<include name="junitcdi-core-${version}.jar" />
 									</zipfileset>
-									<zipfileset prefix="junitcdi/lib" dir="../junitcdi-jta/target">
-										<include name="junitcdi-jta-${version}.jar" />
-									</zipfileset>
 									<zipfileset prefix="junitcdi/lib" dir="../junitcdi-easymock/target">
 										<include name="junitcdi-easymock-${version}.jar" />
 									</zipfileset>
-									<zipfileset prefix="junitcdi/lib" dir="../junitcdi-all/target">
-										<include name="junitcdi-all-${version}.jar" />
-									</zipfileset>
-									<zipfileset prefix="junitcdi/lib" dir="../s2jta/target">
-										<include name="s2jta-${version}.jar" />
+									<zipfileset prefix="junitcdi/lib" dir="../junitcdi-jta/target">
+										<include name="junitcdi-jta-${version}.jar" />
 									</zipfileset>
 									<zipfileset prefix="junitcdi/libsrc" dir="../junitcdi-core/target">
 										<include name="junitcdi-core-${version}-sources.jar" />
 									</zipfileset>
-									<zipfileset prefix="junitcdi/libsrc" dir="../junitcdi-jta/target">
-										<include name="junitcdi-jta-${version}-sources.jar" />
-									</zipfileset>
 									<zipfileset prefix="junitcdi/libsrc" dir="../junitcdi-easymock/target">
 										<include name="junitcdi-easymock-${version}-sources.jar" />
 									</zipfileset>
-									<zipfileset prefix="junitcdi/libsrc" dir="../s2jta/target">
-										<include name="s2jta-${version}-sources.jar" />
+									<zipfileset prefix="junitcdi/libsrc" dir="../junitcdi-jta/target">
+										<include name="junitcdi-jta-${version}-sources.jar" />
 									</zipfileset>
 									<zipfileset prefix="junitcdi/docs" dir="../target/site" />
 									<zipfileset prefix="junitcdi/docs/junitcdi-core"

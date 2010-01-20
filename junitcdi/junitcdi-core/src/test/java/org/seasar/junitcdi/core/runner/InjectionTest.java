@@ -76,9 +76,9 @@ public class InjectionTest {
     @Test
     public void テスト() {
         System.out.println(toString() + " run test method(テスト).");
-        assertThat(singletonBean, notNullValue());
-        assertThat(testClassScopedBean, notNullValue());
-        assertThat(beanManager, notNullValue());
+        assertThat(singletonBean, is(notNullValue()));
+        assertThat(testClassScopedBean, is(notNullValue()));
+        assertThat(beanManager, is(notNullValue()));
     }
 
     /** */

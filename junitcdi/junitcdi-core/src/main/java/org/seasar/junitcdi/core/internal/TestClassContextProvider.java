@@ -27,9 +27,27 @@ import org.seasar.junitcdi.core.TestClassScoped;
  * 
  * @author koichik
  */
-public class TestClassScopedRegister implements Extension {
+public class TestClassContextProvider implements Extension {
+    // /////////////////////////////////////////////////////////////////
+    // instance fields
+    //
+    /** テストクラス・スコープを提供するコンテキスト */
+    protected final TestClassContext context = new TestClassContext();
+
     // /////////////////////////////////////////////////////////////////
     // methods
+    //
+    /**
+     * テストクラス・スコープを提供するコンテキストを返します．
+     * 
+     * @return テストクラス・スコープを提供するコンテキスト
+     */
+    public TestClassContext getContext() {
+        return context;
+    }
+
+    // /////////////////////////////////////////////////////////////////
+    // observer methods
     //
     /**
      * CDIコンテナがbeanを探す前に呼び出されます．
@@ -54,6 +72,6 @@ public class TestClassScopedRegister implements Extension {
      *            イベント
      */
     public void afterBeanDiscovery(@Observes final AfterBeanDiscovery event) {
-        event.addContext(BeanManagerHelper.getTestClassContext());
+        event.addContext(context);
     }
 }

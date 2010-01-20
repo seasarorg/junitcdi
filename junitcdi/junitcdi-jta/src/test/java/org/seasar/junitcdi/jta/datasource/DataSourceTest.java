@@ -19,11 +19,11 @@ import java.sql.Connection;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
-import javax.transaction.UserTransaction;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.seasar.junitcdi.core.runner.CDI;
+import org.seasar.junitcdi.jta.Transactional;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -36,9 +36,6 @@ import static org.junit.Assert.*;
 @RunWith(CDI.class)
 public class DataSourceTest {
     @Inject
-    UserTransaction userTransaction;
-
-    @Inject
     DataSource defaultDataSource;
 
     @Inject
@@ -49,16 +46,12 @@ public class DataSourceTest {
      * @throws Exception
      */
     @Test
+    @Transactional
     public void test() throws Exception {
-        userTransaction.begin();
-        try {
-            assertThat(defaultDataSource, is(notNullValue()));
-            assertThat(hogeDataSource, is(notNullValue()));
-            assertThat(defaultDataSource, is(not(sameInstance(hogeDataSource))));
-            final Connection con = defaultDataSource.getConnection();
-            assertThat(con, is(notNullValue()));
-        } finally {
-            userTransaction.rollback();
-        }
+        assertThat(defaultDataSource, is(notNullValue()));
+        assertThat(hogeDataSource, is(notNullValue()));
+        assertThat(defaultDataSource, is(not(sameInstance(hogeDataSource))));
+        final Connection con = defaultDataSource.getConnection();
+        assertThat(con, is(notNullValue()));
     }
 }

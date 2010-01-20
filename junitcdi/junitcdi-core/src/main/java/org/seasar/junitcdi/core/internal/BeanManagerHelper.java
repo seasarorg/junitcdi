@@ -18,6 +18,7 @@ package org.seasar.junitcdi.core.internal;
 import java.lang.annotation.Annotation;
 import java.util.ServiceLoader;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
@@ -30,9 +31,9 @@ import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.bootstrap.spi.Deployment;
 import org.jboss.weld.context.AbstractApplicationContext;
 import org.jboss.weld.context.ContextLifecycle;
+import org.jboss.weld.context.api.BeanStore;
 import org.jboss.weld.context.api.helpers.ConcurrentHashMapBeanStore;
 import org.jboss.weld.context.beanstore.HashMapBeanStore;
-import org.jboss.weld.environment.se.ShutdownManager;
 import org.jboss.weld.environment.se.discovery.SEWeldDeployment;
 import org.jboss.weld.environment.se.events.ContainerInitialized;
 import org.jboss.weld.environment.se.util.WeldManagerUtils;
@@ -59,9 +60,9 @@ public class BeanManagerHelper {
     protected static final ThreadLocal<Deployment> deployments =
         new InheritableThreadLocal<Deployment>();
 
-    /** テストクラスコンテキスト */
-    protected static final TestClassContext testClassContext =
-        new TestClassContext();
+    /** {@link ApplicationScoped}コンテキストのストア */
+    protected static final BeanStore applicationContextStore =
+        new KeepExtensionBeanStore();
 
     // /////////////////////////////////////////////////////////////////
     // methods
@@ -92,11 +93,12 @@ public class BeanManagerHelper {
             .load(ServicesProvider.class)) {
             provider.registerServices(deployment);
         }
+
         final Bootstrap bootstrap = new WeldBootstrap();
         bootstrap.startContainer(
             Environments.SE,
             deployment,
-            new ConcurrentHashMapBeanStore());
+            applicationContextStore);
         final BeanDeploymentArchive mainBeanDepArch =
             deployment.getBeanDeploymentArchives().iterator().next();
         final BeanManager beanManager = bootstrap.getManager(mainBeanDepArch);
@@ -104,9 +106,6 @@ public class BeanManagerHelper {
 
         bootstrap.startInitialization();
         bootstrap.deployBeans();
-        WeldManagerUtils
-            .getInstanceByType(beanManager, ShutdownManager.class)
-            .setBootstrap(bootstrap);
         bootstrap.validateBeans();
         bootstrap.endInitialization();
         beanManager.fireEvent(new ContainerInitialized());
@@ -204,21 +203,12 @@ public class BeanManagerHelper {
     }
 
     /**
-     * テストクラスコンテキストを返します．
-     * 
-     * @return テストクラスコンテキスト
-     */
-    public static TestClassContext getTestClassContext() {
-        return testClassContext;
-    }
-
-    /**
      * デフォルトの全コンテキストを準備します．
      */
     public static void setupDefaultContexts() {
         final ContextLifecycle lifecycle =
             deployments.get().getServices().get(ContextLifecycle.class);
-        lifecycle.beginApplication(new ConcurrentHashMapBeanStore());
+        lifecycle.beginApplication(applicationContextStore);
         lifecycle.restoreSession("UnitTest", new ConcurrentHashMapBeanStore());
         lifecycle.beginRequest("UnitTest", new HashMapBeanStore());
     }
@@ -231,22 +221,22 @@ public class BeanManagerHelper {
             deployments.get().getServices().get(ContextLifecycle.class);
         lifecycle.endRequest("UnitTest", new HashMapBeanStore());
         lifecycle.endSession("UnitTest", new ConcurrentHashMapBeanStore());
+
         final AbstractApplicationContext singletonContext =
             lifecycle.getSingletonContext();
         singletonContext.destroy();
-        singletonContext.setActive(false);
-        singletonContext.setBeanStore(null);
+
         final AbstractApplicationContext applicationContext =
             lifecycle.getApplicationContext();
         applicationContext.destroy();
-        applicationContext.setActive(false);
-        applicationContext.setBeanStore(null);
     }
 
     /**
      * テストクラス・スコープのコンテキストを準備します．
      */
     public static void setupTestClassContext() {
+        final TestClassContext testClassContext =
+            getBeanInstance(TestClassContextProvider.class).getContext();
         testClassContext.setBeanStore(new HashMapBeanStore());
         testClassContext.setActive(true);
     }
@@ -255,6 +245,8 @@ public class BeanManagerHelper {
      * テストクラス・スコープのコンテキストを破棄します．
      */
     public static void destroyTestClassContext() {
+        final TestClassContext testClassContext =
+            getBeanInstance(TestClassContextProvider.class).getContext();
         testClassContext.destroy();
         testClassContext.setActive(false);
         testClassContext.setBeanStore(null);
