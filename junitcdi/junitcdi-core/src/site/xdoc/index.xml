@@ -15,6 +15,11 @@
 				</li>
 				<li>
 					<a href="#Contexts">コンテキスト</a>
+					<ul>
+						<li>
+							<a href="#TestClassScoped">テストクラス・スコープ</a>
+						</li>
+					</ul>
 				</li>
 				<li>
 					<a href="#Lifecycle_Methods">ライフサイクルメソッド</a>
@@ -97,32 +102,51 @@ public class XxxTest {
 
 		<section name="Contexts">
 			<p>
-				CDI コンテナはテストを実行するプロセスで一つだけ構築されますが，
-				コンテキストはテストメソッドごとに作成して破棄されるため，
-				<code>Singleton</code>
-				や
-				<code>ApplicationScoped</code>
-				もテストメソッドを実行している間だけ有効です．
+				JUnit CDI Extensions では，CDI 標準のコンテキスト (スコープ) を利用することができます．
 			</p>
+			<ul>
+				<li>
+					<code>@ApplicationScoped</code>
+				</li>
+				<li>
+					<code>@Session</code>
+				</li>
+				<li>
+					<code>@Scoped</code>
+				</li>
+				<li>
+					<code>@Singleton</code>
+				</li>
+				<li>
+					<code>@Default</code>
+					(デフォルト)
+				</li>
+			</ul>
 			<p>
-				JUnit CDI Extensions が提供する独自の「テストクラス・スコープ」は，
-				同じテストクラスのメソッドを実行している間有効なスコープを提供します．
+				いずれのコンテキストもテストメソッドを実行している間だけ有効で，
+				テストメソッドの実行が終了するとコンテキストはクリアされます．
 			</p>
-			<p>
-				「テストクラス・スコープ」を使うには，bean に
-				<code>org.seasar.junitcdi.core.TestClassScoped</code>
-				アノテーションを指定します．
-			</p>
-			<p>
-				以下の例では，テストメソッド
-				<code>hoge()</code>
-				および
-				<code>moge()</code>
-				の実行時，フィールド
-				<code>xxx</code>
-				には同じ bean が注入されます．
-			</p>
-			<source><![CDATA[
+
+			<subsection name="TestClassScoped">
+				<p>
+					JUnit CDI Extensions は，同じテストクラスの複数のメソッドを実行している間有効な，
+					独自の「テストクラス・スコープ」を提供します．
+				</p>
+				<p>
+					「テストクラス・スコープ」を使うには，bean に
+					<code>org.seasar.junitcdi.core.TestClassScoped</code>
+					アノテーションを指定します．
+				</p>
+				<p>
+					以下の例では，テストメソッド
+					<code>hoge()</code>
+					および
+					<code>moge()</code>
+					の実行時，フィールド
+					<code>xxx</code>
+					には同じ bean が注入されます．
+				</p>
+				<source><![CDATA[
 @TestClassScoped
 public class XxxBean {
     ...
@@ -145,9 +169,10 @@ public class XxxTest {
     ...
 }
 ]]></source>
-			<p>
-				テストクラスをまたがったスコープは提供されません．
-			</p>
+				<p>
+					テストクラスをまたがったスコープは提供されません．
+				</p>
+			</subsection>
 		</section>
 
 		<section name="Lifecycle Methods">

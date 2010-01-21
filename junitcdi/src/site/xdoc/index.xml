@@ -40,17 +40,6 @@
 					</tr>
 					<tr>
 						<td>
-							<a href="junitcdi-jta/index.html">JTA</a>
-						</td>
-						<td>
-							JUnit 上の CDI コンテナで JTA を利用できるようにします．
-						</td>
-						<td>
-							<a href="junitcdi-jta/apidocs/index.html">Javadoc</a>
-						</td>
-					</tr>
-					<tr>
-						<td>
 							<a href="junitcdi-easymock/index.html">EasyMock</a>
 						</td>
 						<td>
@@ -58,6 +47,17 @@
 						</td>
 						<td>
 							<a href="junitcdi-easymock/apidocs/index.html">Javadoc</a>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="junitcdi-jta/index.html">JTA</a>
+						</td>
+						<td>
+							JUnit 上の CDI コンテナで JTA を利用できるようにします．
+						</td>
+						<td>
+							<a href="junitcdi-jta/apidocs/index.html">Javadoc</a>
 						</td>
 					</tr>
 				</tbody>

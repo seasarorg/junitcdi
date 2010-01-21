@@ -34,7 +34,7 @@ import org.seasar.junitcdi.core.internal.JndiContextFactory;
  * 
  * @author koichik
  */
-public class UserTransactionRegister implements Extension {
+public class UserTransactionRegistrant implements Extension {
     // /////////////////////////////////////////////////////////////////
     // constants
     //

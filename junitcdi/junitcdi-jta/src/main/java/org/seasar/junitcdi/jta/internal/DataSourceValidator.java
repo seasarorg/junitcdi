@@ -68,9 +68,6 @@ public class DataSourceValidator implements Extension {
                 event
                     .addDeploymentProblem(new DataSourceDefinitionNotSpecifiedException(
                         beanClass));
-                // addDeploymentProblem() しても無視される ([WELD-306]) のでやむを得ず．
-                // Weld 1.0.1.CR1が出たら戻す
-                throw new DataSourceDefinitionNotSpecifiedException(beanClass);
             }
             final DataSourceDefinition definition =
                 beanClass.getAnnotation(DataSourceDefinition.class);

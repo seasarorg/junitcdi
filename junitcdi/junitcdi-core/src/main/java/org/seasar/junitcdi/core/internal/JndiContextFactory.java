@@ -20,7 +20,6 @@ import java.util.Hashtable;
 import javax.naming.Context;
 import javax.naming.spi.InitialContextFactory;
 
-import org.jboss.weld.BeanManagerImpl;
 import org.jboss.weld.injection.spi.ResourceInjectionServices;
 
 /**
@@ -36,9 +35,7 @@ public class JndiContextFactory implements InitialContextFactory {
      */
     public static Context getContext() {
         final ResourceInjectionServices resourceInjectionServices =
-            ((BeanManagerImpl) BeanManagerHelper.getBeanManager())
-                .getServices()
-                .get(ResourceInjectionServices.class);
+            BeanManagerHelper.getServices(ResourceInjectionServices.class);
         return ((ResourceInjectionServicesImpl) resourceInjectionServices)
             .getContext();
     }

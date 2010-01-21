@@ -1,2 +1,2 @@
 org.seasar.junitcdi.jta.internal.DataSourceValidator
-org.seasar.junitcdi.jta.internal.UserTransactionRegister
+org.seasar.junitcdi.jta.internal.UserTransactionRegistrant

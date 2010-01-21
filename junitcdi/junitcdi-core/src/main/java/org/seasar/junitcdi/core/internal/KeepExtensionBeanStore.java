@@ -24,11 +24,11 @@ import org.jboss.weld.context.api.helpers.ConcurrentHashMapBeanStore;
 import org.jboss.weld.serialization.spi.helpers.SerializableContextual;
 
 /**
- * {@link #cliear()}が呼ばれても{@link Extension}を削除せずに維持する{@link BeanStore}です．
+ * {@link #clear()}が呼ばれても{@link Extension}を削除せずに維持する{@link BeanStore}です．
  * 
  * @author koichik
  */
-final class KeepExtensionBeanStore extends ConcurrentHashMapBeanStore {
+public class KeepExtensionBeanStore extends ConcurrentHashMapBeanStore {
     // /////////////////////////////////////////////////////////////////
     // methods
     //

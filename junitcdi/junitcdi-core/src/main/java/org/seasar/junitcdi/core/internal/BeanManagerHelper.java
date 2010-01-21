@@ -29,22 +29,14 @@ import org.jboss.weld.bootstrap.api.Environments;
 import org.jboss.weld.bootstrap.api.Service;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.bootstrap.spi.Deployment;
-import org.jboss.weld.context.AbstractApplicationContext;
-import org.jboss.weld.context.ContextLifecycle;
 import org.jboss.weld.context.api.BeanStore;
-import org.jboss.weld.context.api.helpers.ConcurrentHashMapBeanStore;
-import org.jboss.weld.context.beanstore.HashMapBeanStore;
 import org.jboss.weld.environment.se.discovery.SEWeldDeployment;
 import org.jboss.weld.environment.se.events.ContainerInitialized;
 import org.jboss.weld.environment.se.util.WeldManagerUtils;
 import org.jboss.weld.injection.spi.ResourceInjectionServices;
 
 /**
- * CDIコンテナ({@link BeanManager})の作成などを行うヘルパークラスです．
- * <p>
- * 現在の実装はCDIのRIである<a href="http://seamframework.org/Weld">JBoss
- * Weld</a>に依存しています．
- * </p>
+ * {@link BeanManager}を操作するためのヘルパークラスです．
  * 
  * @author koichik
  */
@@ -52,17 +44,9 @@ public class BeanManagerHelper {
     // /////////////////////////////////////////////////////////////////
     // static fields
     //
-    /** スレッド固有の{@link BeanManager} */
+    /** スレッド固有のCDIコンテナ */
     protected static final ThreadLocal<BeanManager> beanManagers =
         new InheritableThreadLocal<BeanManager>();
-
-    /** スレッド固有のデプロイメント */
-    protected static final ThreadLocal<Deployment> deployments =
-        new InheritableThreadLocal<Deployment>();
-
-    /** {@link ApplicationScoped}コンテキストのストア */
-    protected static final BeanStore applicationContextStore =
-        new KeepExtensionBeanStore();
 
     // /////////////////////////////////////////////////////////////////
     // methods
@@ -74,7 +58,10 @@ public class BeanManagerHelper {
      */
     public static BeanManager getBeanManager() {
         final BeanManager beanManager = beanManagers.get();
-        return beanManager != null ? beanManager : createBeanManager();
+        if (beanManager != null) {
+            return beanManager;
+        }
+        return createBeanManager();
     }
 
     /**
@@ -83,9 +70,8 @@ public class BeanManagerHelper {
      * @return CDIコンテナ
      */
     protected static BeanManager createBeanManager() {
+        // setup deployment
         final Deployment deployment = new SEWeldDeployment() {};
-        deployments.set(deployment);
-
         deployment.getServices().add(
             ResourceInjectionServices.class,
             new ResourceInjectionServicesImpl());
@@ -94,7 +80,9 @@ public class BeanManagerHelper {
             provider.registerServices(deployment);
         }
 
+        // create container
         final Bootstrap bootstrap = new WeldBootstrap();
+        final BeanStore applicationContextStore = new KeepExtensionBeanStore();
         bootstrap.startContainer(
             Environments.SE,
             deployment,
@@ -104,12 +92,31 @@ public class BeanManagerHelper {
         final BeanManager beanManager = bootstrap.getManager(mainBeanDepArch);
         beanManagers.set(beanManager);
 
+        // initialize container
         bootstrap.startInitialization();
+        setupLocalStorage(deployment, applicationContextStore);
         bootstrap.deployBeans();
         bootstrap.validateBeans();
         bootstrap.endInitialization();
         beanManager.fireEvent(new ContainerInitialized());
+
         return beanManager;
+    }
+
+    /**
+     * {@link ContainerLocalStorage}を準備します．
+     * 
+     * @param deployment
+     *            CDIコンテナの初期化に使用した{@link Deployment}
+     * @param applicationContextStore
+     *            {@link ApplicationScoped}の{@link BeanStore}
+     */
+    protected static void setupLocalStorage(final Deployment deployment,
+            final BeanStore applicationContextStore) {
+        final ContainerLocalStorage localStorage =
+            getBeanInstance(ContainerLocalStorage.class);
+        localStorage.setDeployment(deployment);
+        localStorage.setApplicationContextStore(applicationContextStore);
     }
 
     /**
@@ -199,74 +206,28 @@ public class BeanManagerHelper {
      * @return サービス
      */
     public static <S extends Service> S getServices(final Class<S> serviceType) {
-        return deployments.get().getServices().get(serviceType);
+        return getDeployment().getServices().get(serviceType);
     }
 
     /**
-     * デフォルトの全コンテキストを準備します．
+     * {@link Deployment}を返します．
+     * 
+     * @return {@link Deployment}
      */
-    public static void setupDefaultContexts() {
-        final ContextLifecycle lifecycle =
-            deployments.get().getServices().get(ContextLifecycle.class);
-        lifecycle.beginApplication(applicationContextStore);
-        lifecycle.restoreSession("UnitTest", new ConcurrentHashMapBeanStore());
-        lifecycle.beginRequest("UnitTest", new HashMapBeanStore());
+    public static Deployment getDeployment() {
+        final ContainerLocalStorage localStorage =
+            getBeanInstance(ContainerLocalStorage.class);
+        return localStorage.getDeployment();
     }
 
     /**
-     * デフォルトの全コンテキストを破棄します．
+     * {@link ApplicationScoped}の{@link BeanStore}を返します．
+     * 
+     * @return {@link ApplicationScoped}の{@link BeanStore}
      */
-    public static void destroyDefaultContexts() {
-        final ContextLifecycle lifecycle =
-            deployments.get().getServices().get(ContextLifecycle.class);
-        lifecycle.endRequest("UnitTest", new HashMapBeanStore());
-        lifecycle.endSession("UnitTest", new ConcurrentHashMapBeanStore());
-
-        final AbstractApplicationContext singletonContext =
-            lifecycle.getSingletonContext();
-        singletonContext.destroy();
-
-        final AbstractApplicationContext applicationContext =
-            lifecycle.getApplicationContext();
-        applicationContext.destroy();
-    }
-
-    /**
-     * テストクラス・スコープのコンテキストを準備します．
-     */
-    public static void setupTestClassContext() {
-        final TestClassContext testClassContext =
-            getBeanInstance(TestClassContextProvider.class).getContext();
-        testClassContext.setBeanStore(new HashMapBeanStore());
-        testClassContext.setActive(true);
-    }
-
-    /**
-     * テストクラス・スコープのコンテキストを破棄します．
-     */
-    public static void destroyTestClassContext() {
-        final TestClassContext testClassContext =
-            getBeanInstance(TestClassContextProvider.class).getContext();
-        testClassContext.destroy();
-        testClassContext.setActive(false);
-        testClassContext.setBeanStore(null);
-    }
-
-    /**
-     * リクエスト・スコープのコンテキストを準備します．
-     */
-    public static void setupRequestContexts() {
-        final ContextLifecycle lifecycle =
-            deployments.get().getServices().get(ContextLifecycle.class);
-        lifecycle.beginRequest("UnitTest", new HashMapBeanStore());
-    }
-
-    /**
-     * リクエスト・スコープのコンテキストを破棄します．
-     */
-    public static void destroyRequestContexts() {
-        final ContextLifecycle lifecycle =
-            deployments.get().getServices().get(ContextLifecycle.class);
-        lifecycle.endRequest("UnitTest", new HashMapBeanStore());
+    public static BeanStore getApplicationContextStore() {
+        final ContainerLocalStorage localStorage =
+            getBeanInstance(ContainerLocalStorage.class);
+        return localStorage.getApplicationContextStore();
     }
 }

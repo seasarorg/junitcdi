@@ -36,6 +36,7 @@ import org.seasar.junitcdi.core.AfterMethod;
 import org.seasar.junitcdi.core.BeforeMethod;
 import org.seasar.junitcdi.core.event.TestInfo;
 import org.seasar.junitcdi.core.internal.BeanManagerHelper;
+import org.seasar.junitcdi.core.internal.LifecycleHelper;
 import org.seasar.junitcdi.core.internal.TestEventNotifier;
 
 /**
@@ -90,11 +91,11 @@ public class CDI extends BlockJUnit4ClassRunner {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                BeanManagerHelper.setupTestClassContext();
+                LifecycleHelper.setupTestClassContext();
                 try {
                     statement.evaluate();
                 } finally {
-                    BeanManagerHelper.destroyTestClassContext();
+                    LifecycleHelper.destroyTestClassContext();
                 }
             }
         };
@@ -105,7 +106,7 @@ public class CDI extends BlockJUnit4ClassRunner {
             final RunNotifier runNotifier) {
         try {
             beanManager = BeanManagerHelper.getBeanManager();
-            BeanManagerHelper.setupDefaultContexts();
+            LifecycleHelper.setupDefaultContexts();
             testEventNotifier =
                 BeanManagerHelper.getBeanInstance(
                     beanManager,
@@ -115,7 +116,7 @@ public class CDI extends BlockJUnit4ClassRunner {
                 super.runChild(method, runNotifier);
             } finally {
                 runNotifier.removeListener(testEventNotifier);
-                BeanManagerHelper.destroyDefaultContexts();
+                LifecycleHelper.destroyDefaultContexts();
                 testEventNotifier = null;
                 beanManager = null;
             }
