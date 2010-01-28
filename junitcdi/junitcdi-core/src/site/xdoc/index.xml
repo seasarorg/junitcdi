@@ -388,12 +388,6 @@ public class XxxBean {
 				<tbody>
 					<tr>
 						<td>
-							<code>org.seasar.junitcdi.core.event.TestObjectObtained</code>
-						</td>
-						<td>テストクラスのインスタンスがCDIコンテナから取得された直後．</td>
-					</tr>
-					<tr>
-						<td>
 							<code>org.seasar.junitcdi.core.event.TestMethodStarted</code>
 						</td>
 						<td>テストメソッドが呼び出される直前</td>
@@ -407,13 +401,13 @@ public class XxxBean {
 				</tbody>
 			</table>
 			<p>
-				以下の例では，テストクラスのインスタンスが CDI コンテナから取得された直後に
-				<code>onTestObjectObtained()</code>
+				以下の例では，テストメソッドが呼び出される直前に
+				<code>onTestMethodStarted()</code>
 				メソッドが呼び出されます．
 			</p>
 			<source><![CDATA[
 public class XxxBean {
-    public void onTestObjectObtained(@Observes @TestObjectObtained TestInfo testInfo) {
+    public void onTestMethodStarted(@Observes @TestMethodStarted TestInfo testInfo) {
         ...
     }
     ...
@@ -460,19 +454,28 @@ public class XxxBean {
 }
 ]]></source>
 			<p>
-				テストが正常に実行される際の，ライフサイクルメソッドと CDI イベントが発生する順序関係は以下のようになります．
+				テストが正常に実行される際の， ライフサイクルメソッドおよび，
+				<code>RunListener</code>
+				イベントと JUnit CDI Extensions 独自のイベントが発生する順序関係は以下のようになります．
 			</p>
 			<table border="1">
 				<thead>
 					<tr>
 						<th>ライフサイクルメソッド</th>
-						<th>CDIイベント</th>
+						<th>
+							<code>RunListener</code>
+							イベント
+						</th>
+						<th>独自イベント</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
 						<td>
 							<code>@BeforeClass</code>
+						</td>
+						<td>
+							<code></code>
 						</td>
 						<td>
 							<code></code>
@@ -485,18 +488,16 @@ public class XxxBean {
 						<td>
 							<code>@TestStarted</code>
 						</td>
-					</tr>
-					<tr>
 						<td>
 							<code></code>
-						</td>
-						<td>
-							<code>@TestObjectObtained</code>
 						</td>
 					</tr>
 					<tr>
 						<td>
 							<code>@Before</code>
+						</td>
+						<td>
+							<code></code>
 						</td>
 						<td>
 							<code></code>
@@ -509,8 +510,14 @@ public class XxxBean {
 						<td>
 							<code></code>
 						</td>
+						<td>
+							<code></code>
+						</td>
 					</tr>
 					<tr>
+						<td>
+							<code></code>
+						</td>
 						<td>
 							<code></code>
 						</td>
@@ -525,8 +532,14 @@ public class XxxBean {
 						<td>
 							<code></code>
 						</td>
+						<td>
+							<code></code>
+						</td>
 					</tr>
 					<tr>
+						<td>
+							<code></code>
+						</td>
 						<td>
 							<code></code>
 						</td>
@@ -541,10 +554,16 @@ public class XxxBean {
 						<td>
 							<code></code>
 						</td>
+						<td>
+							<code></code>
+						</td>
 					</tr>
 					<tr>
 						<td>
 							<code>@After</code>
+						</td>
+						<td>
+							<code></code>
 						</td>
 						<td>
 							<code></code>
@@ -557,10 +576,16 @@ public class XxxBean {
 						<td>
 							<code>@TestFinished</code>
 						</td>
+						<td>
+							<code></code>
+						</td>
 					</tr>
 					<tr>
 						<td>
 							<code>@AfterClass</code>
+						</td>
+						<td>
+							<code></code>
 						</td>
 						<td>
 							<code></code>

@@ -65,61 +65,6 @@ public class BeanManagerHelper {
     }
 
     /**
-     * CDIコンテナを作成します．
-     * 
-     * @return CDIコンテナ
-     */
-    protected static BeanManager createBeanManager() {
-        // setup deployment
-        final Deployment deployment = new SEWeldDeployment() {};
-        deployment.getServices().add(
-            ResourceInjectionServices.class,
-            new ResourceInjectionServicesImpl());
-        for (final ServicesProvider provider : ServiceLoader
-            .load(ServicesProvider.class)) {
-            provider.registerServices(deployment);
-        }
-
-        // create container
-        final Bootstrap bootstrap = new WeldBootstrap();
-        final BeanStore applicationContextStore = new KeepExtensionBeanStore();
-        bootstrap.startContainer(
-            Environments.SE,
-            deployment,
-            applicationContextStore);
-        final BeanDeploymentArchive mainBeanDepArch =
-            deployment.getBeanDeploymentArchives().iterator().next();
-        final BeanManager beanManager = bootstrap.getManager(mainBeanDepArch);
-        beanManagers.set(beanManager);
-
-        // initialize container
-        bootstrap.startInitialization();
-        setupLocalStorage(deployment, applicationContextStore);
-        bootstrap.deployBeans();
-        bootstrap.validateBeans();
-        bootstrap.endInitialization();
-        beanManager.fireEvent(new ContainerInitialized());
-
-        return beanManager;
-    }
-
-    /**
-     * {@link ContainerLocalStorage}を準備します．
-     * 
-     * @param deployment
-     *            CDIコンテナの初期化に使用した{@link Deployment}
-     * @param applicationContextStore
-     *            {@link ApplicationScoped}の{@link BeanStore}
-     */
-    protected static void setupLocalStorage(final Deployment deployment,
-            final BeanStore applicationContextStore) {
-        final ContainerLocalStorage localStorage =
-            getBeanInstance(ContainerLocalStorage.class);
-        localStorage.setDeployment(deployment);
-        localStorage.setApplicationContextStore(applicationContextStore);
-    }
-
-    /**
      * 指定された型のbeanを返します．
      * 
      * @param <T>
@@ -221,11 +166,66 @@ public class BeanManagerHelper {
     }
 
     /**
+     * CDIコンテナを作成します．
+     * 
+     * @return CDIコンテナ
+     */
+    protected static BeanManager createBeanManager() {
+        // setup deployment
+        final Deployment deployment = new SEWeldDeployment() {};
+        deployment.getServices().add(
+            ResourceInjectionServices.class,
+            new ResourceInjectionServicesImpl());
+        for (final ServicesProvider provider : ServiceLoader
+            .load(ServicesProvider.class)) {
+            provider.registerServices(deployment);
+        }
+
+        // create container
+        final Bootstrap bootstrap = new WeldBootstrap();
+        final BeanStore applicationContextStore = new KeepExtensionBeanStore();
+        bootstrap.startContainer(
+            Environments.SE,
+            deployment,
+            applicationContextStore);
+        final BeanDeploymentArchive mainBeanDepArch =
+            deployment.getBeanDeploymentArchives().iterator().next();
+        final BeanManager beanManager = bootstrap.getManager(mainBeanDepArch);
+        beanManagers.set(beanManager);
+
+        // initialize container
+        bootstrap.startInitialization();
+        setupLocalStorage(deployment, applicationContextStore);
+        bootstrap.deployBeans();
+        bootstrap.validateBeans();
+        bootstrap.endInitialization();
+        beanManager.fireEvent(new ContainerInitialized());
+
+        return beanManager;
+    }
+
+    /**
+     * {@link ContainerLocalStorage}を準備します．
+     * 
+     * @param deployment
+     *            CDIコンテナの初期化に使用した{@link Deployment}
+     * @param applicationContextStore
+     *            {@link ApplicationScoped}の{@link BeanStore}
+     */
+    protected static void setupLocalStorage(final Deployment deployment,
+            final BeanStore applicationContextStore) {
+        final ContainerLocalStorage localStorage =
+            getBeanInstance(ContainerLocalStorage.class);
+        localStorage.setDeployment(deployment);
+        localStorage.setApplicationContextStore(applicationContextStore);
+    }
+
+    /**
      * {@link ApplicationScoped}の{@link BeanStore}を返します．
      * 
      * @return {@link ApplicationScoped}の{@link BeanStore}
      */
-    public static BeanStore getApplicationContextStore() {
+    protected static BeanStore getApplicationContextStore() {
         final ContainerLocalStorage localStorage =
             getBeanInstance(ContainerLocalStorage.class);
         return localStorage.getApplicationContextStore();

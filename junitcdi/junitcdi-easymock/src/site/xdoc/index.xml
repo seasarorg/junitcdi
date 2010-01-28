@@ -21,7 +21,7 @@
 
 		<section name="Abstract">
 			<p>
-				JUnit CDI Extensions for EasyMock は，テストクラスで
+				JUnit CDI Extensions for EasyMock は，テストクラスや bean での
 				<a href="http://easymock.org/">EasyMock</a>
 				の利用をサポートします．
 			</p>
@@ -31,7 +31,7 @@
 				CGLIB の Jar ファイルがクラスパスにあれば自動的に EasyMock Class Extension が利用されます．
 			</p>
 			<p>
-				モックを作成するには，テストクラスのフィールドに
+				モックを作成するには，テストクラスや bean クラスのフィールドに
 				<code>org.seasar.junitcdi.easymock.EasyMock</code>
 				アノテーションを指定します．
 			</p>
@@ -44,9 +44,8 @@ public class XxxTest {
 }
 ]]></source>
 			<p>
-				テストクラスがCDIコンテナから構築された後 (
-				<code>@PostConstruct</code>
-				の後)，モックオブジェクトが作成されてフィールドに設定されます．
+				テストクラスや bean のインスタンスが CDI コンテナにより構築されて DI が行われるタイミングで，
+				モックオブジェクトが作成されてフィールドに設定されます．
 			</p>
 			<p>
 				モックの種類を切り替えるには，
@@ -59,7 +58,7 @@ public class XxxTest {
 @RunWith(CDI.class)
 public class XxxTest {
     @EasyMock(EasyMockType.STRICT)
-    XxxDao mockDao;
+    XxxService xxxService
     ...
 }
 ]]></source>
@@ -100,7 +99,7 @@ public class XxxTest {
 				</tbody>
 			</table>
 			<p>
-				モックの振る舞いは
+				モックの振る舞いはテストクラスの
 				<code>@Before</code>
 				または
 				<code>@BeforeTest</code>
@@ -109,7 +108,7 @@ public class XxxTest {
 			<source><![CDATA[
     @BeforeMethod
     public void beforeTest() {
-        expect(mockDao.findByName(...)).andReturn(...);
+        expect(mockService.findByName(...)).andReturn(...);
     }
 }
 ]]></source>
@@ -119,9 +118,7 @@ public class XxxTest {
 			<source><![CDATA[
     @Test
     public void test() {
-        XxxService xxxService = new XxxService();
-        xxxService.xxxDao = mockDao;
-        assertThat(xxxService.xxx(...), is(...));
+        assertThat(mockService.findByName(...), is(...));
     }
 }
 ]]></source>
@@ -133,81 +130,60 @@ public class XxxTest {
 
 		<section name="Produces">
 			<p>
-				モックオブジェクト bean としてプロデュースすることができます．
+				モックオブジェクトを bean としてプロデュースすることができます．
 			</p>
 			<source><![CDATA[
+@RunWith(CDI.class)
+public class HogeTest {
     @EasyMock
     @Produces
     XxxDao xxxDao;
+    ...
+}
+
+public class XxxService {
+    @Inject
+    XxxDao xxxDao;
+    ...
+}
 ]]></source>
 			<p>
-				モックオブジェクトは，テストクラスが構築された後 (
-				<code>@PostConstruct</code>
-				の後) に作成されるため，モックオブジェクトを利用する bean を
-				<code>@Inject</code>
-				で取得することは出来ません．
+				<code>XxxService</code>
+				の
+				<code>xxxDao</code>
+				フィールドにはモックオブジェクトが DI されます．
 			</p>
 			<p>
-				次の例では，
-				<code>XxxService</code>
-				が作成されるのは
-				テストクラスの構築中 (
-				<code>@PostConstruct</code>
-				の前) であり，モックオブジェクトはまだ作成されていないので，
-				<code>XxxService</code>
-				に
+				ただし，クラスパス中にモックオブジェクトと同じ型の bean (上の例では
 				<code>XxxDao</code>
-				のモックは注入されません．
+				) が存在すると，DI が曖昧で解決できないために例外が発生します．
+				曖昧さを解決するために CDI 仕様では
+				<code>Qualifier</code>
+				を指定する・
+				<code>Alternative</code>
+				を利用するなどの方法がありますが，テスト対象のクラスを変更しないでモックに差し替えることは困難です．
+			</p>
+			<p>
+				このような場合は
+				<code>@Produces</code>
+				を使用せず，テストクラスでモックオブジェクトを設定する方が簡単です．
 			</p>
 			<source><![CDATA[
+@RunWith(CDI.class)
+public class HogeTest {
     @EasyMock
-    @Produces
     XxxDao xxxDao;
 
     @Inject
     XxxService xxxService;
-]]></source>
-			<p>
-				このような場合には，テストメソッドや
-				<code>@Before</code>
-				メソッドまたは
-				<code>@BeforeMethod</code>
-				メソッドの中で，モックオブジェクトが DI される bean をルックアップします．
-			</p>
-			<p>
-				bean をルックアップするには，CDI 標準の
-				<code>javax.enterprise.inject.spi.BeanManager</code>
-				を DI で入手して使用するか，
-				<code>org.seasar.junitcdi.core.util.BeanLookupUtil</code>
-				を使用します．
-			</p>
-			<p>
-				次の例では，テストメソッドで
-				<code>XxxService</code>
-				がルックアップされる時点でモックオブジェクトが利用可能であるため，
-				<code>XxxDao</code>
-				が DI された
-				<code>XxxService</code>
-				を入手することができます．
-			</p>
-			<source><![CDATA[
-    @EasyMock
-    @Produces
-    XxxDao xxxDao;
 
-    @Test
-    public void test() throws Exception {
-        XxxService xxxService = BeanLookupUtil.getBeanInstance(XxxService.class);
-        ...
+    @Before
+    public void before() throws Exception {
+        xxxService.xxxDao = xxxDao;
     }
+    ...
+}
 ]]></source>
-			<p>
-				<code>BeanLookupUtil</code>
-				の詳細は
-				<a
-					href="../junitcdi-core/apidocs/org/seasar/junitcdi/core/util/BeanLookupUtil.html">Javadoc</a>
-				を参照してください．
-			</p>
 		</section>
 
 		<section name="EasyMockController">

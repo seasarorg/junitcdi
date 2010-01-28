@@ -150,14 +150,10 @@ public class CDI extends BlockJUnit4ClassRunner {
             if (bean.getBeanClass() == testClass) {
                 testBean = bean;
                 creationalContext = beanManager.createCreationalContext(bean);
-                final Object test =
-                    beanManager
-                        .getReference(bean, testClass, creationalContext);
-                testEventNotifier.testObjectObtained(new TestInfo(
-                    getDescription(),
+                return beanManager.getReference(
                     bean,
-                    test));
-                return test;
+                    testClass,
+                    creationalContext);
             }
         }
         throw new TestClassNotBeanException(testClass);

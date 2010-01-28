@@ -35,7 +35,6 @@ import org.seasar.junitcdi.core.event.TestIgnored;
 import org.seasar.junitcdi.core.event.TestInfo;
 import org.seasar.junitcdi.core.event.TestMethodFinished;
 import org.seasar.junitcdi.core.event.TestMethodStarted;
-import org.seasar.junitcdi.core.event.TestObjectObtained;
 import org.seasar.junitcdi.core.event.TestStarted;
 
 /**
@@ -166,26 +165,6 @@ public class TestEventNotifier extends RunListener {
     // /////////////////////////////////////////////////////////////////
     // methods
     //
-    /**
-     * テストオブジェクトがCDIコンテナから取得されたことを通知します．
-     * 
-     * @param testInfo
-     *            テストの情報
-     * @throws Exception
-     *             オブザーバーが例外をスローした場合
-     */
-    public void testObjectObtained(final TestInfo testInfo) throws Exception {
-        try {
-            testContextEvent.select(
-                getQualifiers(
-                    testInfo.getDescription(),
-                    new AnnotationLiteral<TestObjectObtained>() {})).fire(
-                testInfo);
-        } catch (final ObserverException e) {
-            rethrow(e);
-        }
-    }
-
     /**
      * テストメソッドの実行が開始されることを通知します．
      * 

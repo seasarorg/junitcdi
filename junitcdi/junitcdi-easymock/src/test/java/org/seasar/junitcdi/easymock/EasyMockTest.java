@@ -18,13 +18,13 @@ package org.seasar.junitcdi.easymock;
 import java.util.concurrent.Callable;
 
 import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.seasar.junitcdi.core.BeforeMethod;
 import org.seasar.junitcdi.core.runner.CDI;
-import org.seasar.junitcdi.core.util.BeanLookupUtil;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -43,6 +43,9 @@ public class EasyMockTest {
     @Produces
     Callable<String> mock;
 
+    @Inject
+    ConsumerBean bean;
+
     /**
      * @throws Exception
      */
@@ -60,8 +63,6 @@ public class EasyMockTest {
         assertThat(mock, is(notNullValue()));
         assertThat(mock.call(), is("hoge"));
 
-        final ConsumerBean bean =
-            BeanLookupUtil.getBeanInstance(ConsumerBean.class);
         assertThat(bean.mock, is(notNullValue()));
         assertThat(bean.mock.call(), is("moge"));
     }
