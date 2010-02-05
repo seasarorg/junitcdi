@@ -9,30 +9,30 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
 package org.seasar.junitcdi.easymock;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
-
 /**
- * EasyMockで作成されるモックがDIされるフィールドであることを示します．
+ * 
  * 
  * @author koichik
  */
-@Documented
-@Target(FIELD)
-@Retention(RUNTIME)
-public @interface EasyMock {
+public class Emp {
+    String name;
+
     /**
-     * モックの種類を指定します．
+     * 
      */
-    EasyMockType value() default EasyMockType.DEFAULT;
+    public Emp() {
+    }
+
+    /**
+     * @param name
+     */
+    public Emp(final String name) {
+        this.name = name;
+    }
 }

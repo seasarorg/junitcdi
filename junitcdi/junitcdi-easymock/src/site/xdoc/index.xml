@@ -157,30 +157,27 @@ public class XxxService {
 				ただし，クラスパス中にモックオブジェクトと同じ型の bean (上の例では
 				<code>XxxDao</code>
 				) が存在すると，DI が曖昧で解決できないために例外が発生します．
-				曖昧さを解決するために CDI 仕様では
-				<code>Qualifier</code>
-				を指定する・
-				<code>Alternative</code>
-				を利用するなどの方法がありますが，テスト対象のクラスを変更しないでモックに差し替えることは困難です．
+				曖昧さを解決するには，
+				<code>org.seasar.junitcdi.easymock.AlternativeMock</code>
+				で注釈します (詳細は CDI 仕様書の「2.6. Alternatives」を参照してください)．
 			</p>
 			<p>
-				このような場合は
-				<code>@Produces</code>
-				を使用せず，テストクラスでモックオブジェクトを設定する方が簡単です．
+				以下の例では，クラスパス中に
+				<code>XxxDao</code>
+				クラスがあっても
+				<code>XxxService</code>
+				にはモックが DI されます．
 			</p>
 			<source><![CDATA[
 @RunWith(CDI.class)
 public class HogeTest {
     @EasyMock
+    @AlternativeMock
+    @Produces
     XxxDao xxxDao;
-
+    
     @Inject
     XxxService xxxService;
-
-    @Before
-    public void before() throws Exception {
-        xxxService.xxxDao = xxxDao;
-    }
     ...
 }
 ]]></source>
