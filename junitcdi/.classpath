@@ -12,6 +12,10 @@
 	<classpathentry kind="src" output="junitcdi-jta/target/classes" path="junitcdi-jta/src/main/resources"/>
 	<classpathentry kind="src" output="junitcdi-jta/target/test-classes" path="junitcdi-jta/src/test/java"/>
 	<classpathentry kind="src" output="junitcdi-jta/target/test-classes" path="junitcdi-jta/src/test/resources"/>
+	<classpathentry kind="src" path="junitcdi-validation/src/main/java"/>
+	<classpathentry kind="src" path="junitcdi-validation/src/main/resources"/>
+	<classpathentry kind="src" path="junitcdi-validation/src/test/java"/>
+	<classpathentry kind="src" path="junitcdi-validation/src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-core/lib/junit-4.5.jar" sourcepath="junitcdi-core/libsrc/junit-4.5-src.jar"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-core/lib/cal10n-api-0.7.2.jar"/>
@@ -41,5 +45,7 @@
 	<classpathentry exported="true" kind="lib" path="junitcdi-jta/lib/jta-1.1.jar" sourcepath="junitcdi-jta/libsrc/jta-1.1-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-jta/lib/s2-extension-2.4.40.jar" sourcepath="junitcdi-jta/libsrc/s2-extension-2.4.40-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-jta/lib/s2-framework-2.4.40.jar" sourcepath="junitcdi-jta/libsrc/s2-framework-2.4.40-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="junitcdi-validation/lib/hibernate-validator-4.0.2.GA.jar" sourcepath="junitcdi-validation/libsrc/hibernate-validator-4.0.2.GA-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="junitcdi-validation/lib/validation-api-1.0.0.GA.jar" sourcepath="junitcdi-validation/libsrc/validation-api-1.0.0.GA-sources.jar"/>
 	<classpathentry kind="output" path="junitcdi-core/target/classes"/>
 </classpath>

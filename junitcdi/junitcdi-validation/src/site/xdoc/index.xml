@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>About</title>
+	</properties>
+	<body>
+		<section name="JUnit CDI Extensions for Bean Validation">
+			<ul>
+				<li>
+					<a href="#Abstract">概要</a>
+				</li>
+			</ul>
+		</section>
+
+		<section name="Abstract">
+			<p>
+				JUnit CDI Extensions for Bean Validation は，テストクラスや bean で
+				<a href="http://jcp.org/en/jsr/detail?id=303">JSR-303 Bean Validation</a>
+				の利用をサポートします．
+			</p>
+			<p>
+				JUnit CDI Extensions for Bean Validation の Jar ファイルおよび，Bean
+				Validation の実装をクラスパスに配置することにより， テストクラスや bean に
+				<code>javax.validation.ValidatorFactory</code>
+				や
+				<code>javax.validation.Validator</code>
+				を DI できるようになります．
+			</p>
+			<source><![CDATA[
+@RunWith(CDI.class)
+public class XxxTest {
+    @Inject
+    Validator validator;
+    ...
+}
+]]></source>
+		</section>
+	</body>
+</document>

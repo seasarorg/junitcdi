@@ -60,6 +60,19 @@
 							<a href="junitcdi-jta/apidocs/index.html">Javadoc</a>
 						</td>
 					</tr>
+					<tr>
+						<td>
+							<a href="junitcdi-validation/index.html">Bean Validation</a>
+						</td>
+						<td>
+							JUnit 上の CDI コンテナで
+							<a href="http://jcp.org/en/jsr/detail?id=303">JSR-303 Bean Validation</a>
+							を利用できるようにします．
+						</td>
+						<td>
+							<a href="junitcdi-validation/apidocs/index.html">Javadoc</a>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</section>

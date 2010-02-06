@@ -31,12 +31,16 @@ import javax.enterprise.inject.spi.InjectionPoint;
 import javax.enterprise.inject.spi.InjectionTarget;
 import javax.enterprise.inject.spi.ProcessInjectionTarget;
 
+import org.jboss.interceptor.util.InterceptionUtils;
 import org.seasar.junitcdi.core.internal.BeanManagerHelper;
 import org.seasar.junitcdi.easymock.EasyMock;
 import org.seasar.junitcdi.easymock.EasyMockController;
 
 /**
  * {@link EasyMock}で注釈されたフィールドにEasyMockで作成されたモックをDIする{@link Extension}です．
+ * <p>
+ * 現在の実装は Weld (JBoss Interceptor) に依存しています．
+ * </p>
  * 
  * @author koichik
  */
@@ -143,9 +147,10 @@ public class EasyMockInjectionTargetProcessor implements Extension {
         //
         @Override
         public void inject(final X instance, final CreationalContext<X> ctx) {
+            final X rawInstance = InterceptionUtils.getRawInstance(instance);
             for (final Field field : mockFields) {
                 try {
-                    bindMockField(field, instance);
+                    bindMockField(field, rawInstance);
                 } catch (final Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -162,7 +167,7 @@ public class EasyMockInjectionTargetProcessor implements Extension {
         public void preDestroy(final X instance) {
             delegate.preDestroy(instance);
             try {
-                unbindMockFields(instance);
+                unbindMockFields(InterceptionUtils.getRawInstance(instance));
             } catch (final Exception e) {
                 throw new RuntimeException(e);
             }
