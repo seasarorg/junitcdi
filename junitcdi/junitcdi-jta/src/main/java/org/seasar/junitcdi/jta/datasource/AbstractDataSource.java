@@ -149,7 +149,7 @@ public abstract class AbstractDataSource implements DataSource {
 
     /** 連携する{@link TransactionManager} */
     @Inject
-    TransactionManager transactionManager;
+    protected TransactionManager transactionManager;
 
     /** コネクションプール */
     protected DataSourceImpl dataSource;

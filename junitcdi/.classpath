@@ -12,10 +12,10 @@
 	<classpathentry kind="src" output="junitcdi-jta/target/classes" path="junitcdi-jta/src/main/resources"/>
 	<classpathentry kind="src" output="junitcdi-jta/target/test-classes" path="junitcdi-jta/src/test/java"/>
 	<classpathentry kind="src" output="junitcdi-jta/target/test-classes" path="junitcdi-jta/src/test/resources"/>
-	<classpathentry kind="src" path="junitcdi-validation/src/main/java"/>
-	<classpathentry kind="src" path="junitcdi-validation/src/main/resources"/>
-	<classpathentry kind="src" path="junitcdi-validation/src/test/java"/>
-	<classpathentry kind="src" path="junitcdi-validation/src/test/resources"/>
+	<classpathentry kind="src" output="junitcdi-validation/target/classes" path="junitcdi-validation/src/main/java"/>
+	<classpathentry kind="src" output="junitcdi-validation/target/classes" path="junitcdi-validation/src/main/resources"/>
+	<classpathentry kind="src" output="junitcdi-validation/target/test-classes" path="junitcdi-validation/src/test/java"/>
+	<classpathentry kind="src" output="junitcdi-validation/target/test-classes" path="junitcdi-validation/src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-core/lib/junit-4.5.jar" sourcepath="junitcdi-core/libsrc/junit-4.5-src.jar"/>
 	<classpathentry exported="true" kind="lib" path="junitcdi-core/lib/cal10n-api-0.7.2.jar"/>
