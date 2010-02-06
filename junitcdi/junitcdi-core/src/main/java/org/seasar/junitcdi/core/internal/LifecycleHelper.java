@@ -64,7 +64,7 @@ public class LifecycleHelper {
      */
     public static void setupTestClassContext() {
         final TestClassContext testClassContext =
-            getBeanInstance(TestClassContextProvider.class).getContext();
+            getBeanInstance(TestClassContextRegistrant.class).getContext();
         testClassContext.setBeanStore(new HashMapBeanStore());
         testClassContext.setActive(true);
     }
@@ -74,7 +74,7 @@ public class LifecycleHelper {
      */
     public static void destroyTestClassContext() {
         final TestClassContext testClassContext =
-            getBeanInstance(TestClassContextProvider.class).getContext();
+            getBeanInstance(TestClassContextRegistrant.class).getContext();
         testClassContext.destroy();
         testClassContext.setActive(false);
         testClassContext.setBeanStore(null);

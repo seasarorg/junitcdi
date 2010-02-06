@@ -23,11 +23,11 @@ import javax.enterprise.inject.spi.Extension;
 import org.seasar.junitcdi.core.TestClassScoped;
 
 /**
- * テストクラス・スコープを追加するための{@link Extension}です．
+ * テストクラス・スコープを提供するコンテキストを追加するための{@link Extension}です．
  * 
  * @author koichik
  */
-public class TestClassContextProvider implements Extension {
+public class TestClassContextRegistrant implements Extension {
     // /////////////////////////////////////////////////////////////////
     // instance fields
     //

@@ -24,7 +24,7 @@ import org.seasar.junitcdi.core.internal.ServicesProvider;
  * 
  * @author koichik
  */
-public class ValidationServiceProvider implements ServicesProvider {
+public class ValidationServicesProvider implements ServicesProvider {
     // /////////////////////////////////////////////////////////////////
     // methods from ServicesProvider
     //

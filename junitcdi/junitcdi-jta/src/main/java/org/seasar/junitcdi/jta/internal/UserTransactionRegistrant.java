@@ -30,7 +30,7 @@ import org.seasar.junitcdi.core.internal.JndiContextFactory;
 
 /**
  * {@link UserTransaction}および{@link TransactionSynchronizationRegistry}
- * をJNDIに登録します．
+ * をJNDIに登録ための{@link Extension}です．
  * 
  * @author koichik
  */

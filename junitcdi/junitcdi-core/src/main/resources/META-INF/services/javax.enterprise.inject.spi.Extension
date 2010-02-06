@@ -1,2 +1,2 @@
 org.seasar.junitcdi.core.internal.ContainerLocalStorage
-org.seasar.junitcdi.core.internal.TestClassContextProvider
+org.seasar.junitcdi.core.internal.TestClassContextRegistrant
