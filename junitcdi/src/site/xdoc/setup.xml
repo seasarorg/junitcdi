@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>Setup</title>
+	</properties>
+	<body>
+		<section name="Setup">
+			<ul>
+				<li>
+					<a href="#Distribution">配布ファイルからの利用</a>
+				</li>
+				<li>
+					<a href="#Manve">Mavenからの利用</a>
+				</li>
+			</ul>
+		</section>
+
+		<section name="Distribution">
+			<p>
+				JUnit CDI Extensions の配布ファイルを
+				<a href="downloads.html">ダウンロード</a>
+				して，適当なディレクトリに展開してください．
+			</p>
+			<p>
+				配布ファイルのディレクトリ構成は次のようになっています．
+			</p>
+			<ul>
+				<li>
+					junitcdi
+					<ul>
+						<li>
+							<code>junitcdi-xxx</code>
+							(サブプロジェクト)
+							<ul>
+								<li>
+									<code>lib</code>
+									<ul>
+										<li>サブプロジェクトと依存ライブラリの Jar ファイル</li>
+									</ul>
+								</li>
+								<li>
+									<code>libsrc</code>
+									<ul>
+										<li>サブプロジェクトと依存ライブラリのソース Jar ファイル</li>
+									</ul>
+								</li>
+								<li>
+									<code>src</code>
+									<ul>
+										<li>
+											<code>main</code>
+											<ul>
+												<li>
+													<code>java</code>
+												</li>
+												<li>
+													<code>resources</code>
+												</li>
+											</ul>
+										</li>
+										<li>
+											<code>test</code>
+											<ul>
+												<li>
+													<code>java</code>
+												</li>
+												<li>
+													<code>resources</code>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+								<li>
+									<code>pom.xml</code>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<p>
+				サブプロジェクトごとのディレクトリ (
+				<code>junitcdi-xxx</code>
+				) の下に，そのサブプロジェクトと依存ライブラリの Jar ファイルが含まれています．
+				使用するサブプロジェクトに合わせて Jar
+				ファイルをクラスパスに設定してください．
+			</p>
+		</section>
+
+		<section name="Maven">
+			<p>
+				Maven から利用するには，Seasar プロジェクトの Maven リポジトリを
+				<code>pom.xml</code>
+				に追加してください．
+			</p>
+			<source><![CDATA[
+<repositories>
+  <repository>
+    <id>maven.seasar.org</id>
+    <name>The Seasar Foundation Maven2 Repository</name>
+    <url>http://maven.seasar.org/maven2</url>
+  </repository>
+</repositories>
+]]></source>
+			<p>
+				利用するサブプロジェクトを依存関係に追加してください．
+			</p>
+			<source><![CDATA[
+<dependencies>
+  <dependency>
+    <groupId>org.seasar.junitcdi</groupId>
+      <artifactId>junitcdi-xxx</artifactId>
+      <version>0.0.0</version>
+      <scope>test</scope>
+  </dependency>
+</dependencies>
+]]></source>
+			<p>
+				詳細は各サブプロジェクトの「プロジェクト情報」－「依存関係」を参照してください．
+			</p>
+		</section>
+	</body>
+</document>

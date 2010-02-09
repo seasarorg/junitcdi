@@ -39,30 +39,44 @@
 										<exclude name="**/bin**" />
 										<exclude name="**/target/**" />
 									</zipfileset>
-									<zipfileset prefix="junitcdi/lib" dir="../junitcdi-core/target">
+									<zipfileset prefix="junitcdi/junitcdi-core/lib" dir="../junitcdi-core/target">
 										<include name="junitcdi-core-${version}.jar" />
 									</zipfileset>
-									<zipfileset prefix="junitcdi/lib" dir="../junitcdi-easymock/target">
-										<include name="junitcdi-easymock-${version}.jar" />
-									</zipfileset>
-									<zipfileset prefix="junitcdi/lib" dir="../junitcdi-jta/target">
-										<include name="junitcdi-jta-${version}.jar" />
-									</zipfileset>
-									<zipfileset prefix="junitcdi/libsrc" dir="../junitcdi-core/target">
+									<zipfileset prefix="junitcdi/junitcdi-core/libsrc"
+										dir="../junitcdi-core/target">
 										<include name="junitcdi-core-${version}-sources.jar" />
 									</zipfileset>
-									<zipfileset prefix="junitcdi/libsrc" dir="../junitcdi-easymock/target">
+									<zipfileset prefix="junitcdi/junitcdi-easymock/lib"
+										dir="../junitcdi-easymock/target">
+										<include name="junitcdi-easymock-${version}.jar" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/junitcdi-easymock/libsrc"
+										dir="../junitcdi-easymock/target">
 										<include name="junitcdi-easymock-${version}-sources.jar" />
 									</zipfileset>
-									<zipfileset prefix="junitcdi/libsrc" dir="../junitcdi-jta/target">
+									<zipfileset prefix="junitcdi/junitcdi-jta/lib" dir="../junitcdi-jta/target">
+										<include name="junitcdi-jta-${version}.jar" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/junitcdi-jta/libsrc"
+										dir="../junitcdi-jta/target">
 										<include name="junitcdi-jta-${version}-sources.jar" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/junitcdi-validation/lib"
+										dir="../junitcdi-validation/target">
+										<include name="junitcdi-validation-${version}.jar" />
+									</zipfileset>
+									<zipfileset prefix="junitcdi/junitcdi-validation/libsrc"
+										dir="../junitcdi-validation/target">
+										<include name="junitcdi-validation-${version}-sources.jar" />
 									</zipfileset>
 									<zipfileset prefix="junitcdi/docs" dir="../target/site" />
 									<zipfileset prefix="junitcdi/docs/junitcdi-core"
 										dir="../junitcdi-core/target/site" />
-									<zipfileset prefix="junitcdi/docs/junitcdi-jta" dir="../junitcdi-jta/target/site" />
 									<zipfileset prefix="junitcdi/docs/junitcdi-easymock"
 										dir="../junitcdi-easymock/target/site" />
+									<zipfileset prefix="junitcdi/docs/junitcdi-jta" dir="../junitcdi-jta/target/site" />
+									<zipfileset prefix="junitcdi/docs/junitcdi-validation"
+										dir="../junitcdi-validation/target/site" />
 								</zip>
 							</tasks>
 						</configuration>
