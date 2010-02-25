@@ -31,8 +31,11 @@
 							<a href="junitcdi-core/index.html">Core</a>
 						</td>
 						<td>
-							JUnit4のテストクラスでJSR-299 Contexts and Dependency Injection (CDI)を
-							利用するための基本機能を提供します．
+							JUnit4のテストクラスで
+							<a href="http://jcp.org/en/jsr/detail?id=299">
+								JSR-299 Contexts and Dependency Injection (CDI)
+							</a>
+							を利用するための基本機能を提供します．
 						</td>
 						<td>
 							<a href="junitcdi-core/apidocs/index.html">Javadoc</a>
