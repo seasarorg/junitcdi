@@ -17,10 +17,7 @@ package org.seasar.junitcdi.core.internal;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
-import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
-
-import org.seasar.junitcdi.core.TestClassScoped;
 
 /**
  * テストクラス・スコープを提供するコンテキストを追加するための{@link Extension}です．
@@ -49,19 +46,6 @@ public class TestClassContextRegistrant implements Extension {
     // /////////////////////////////////////////////////////////////////
     // observer methods
     //
-    /**
-     * CDIコンテナがbeanを探す前に呼び出されます．
-     * <p>
-     * CDIコンテナにテストクラス・スコープを注釈する{@link TestClassScoped}を登録します．
-     * </p>
-     * 
-     * @param event
-     *            イベント
-     */
-    public void beforeBeanDiscovery(@Observes final BeforeBeanDiscovery event) {
-        event.addScope(TestClassScoped.class, true, false);
-    }
-
     /**
      * CDIコンテナがbeanを探した後に呼び出されます．
      * <p>
