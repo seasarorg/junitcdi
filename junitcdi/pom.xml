@@ -15,6 +15,7 @@
 		<module>junitcdi-validation</module>
 		<module>junitcdi-dist</module>
 	</modules>
+
 	<!-- More Project Information -->
 	<name>JUnit CDI Extensions Project</name>
 	<description>JUnit CDI Extensions Project</description>
@@ -70,9 +71,9 @@
 		</mailingList>
 	</mailingLists>
 	<scm>
-		<connection>scm:svn:https://www.seasar.org/svn/sandbox/junitcdi/trunk/aptina/</connection>
+		<connection>scm:svn:https://www.seasar.org/svn/sandbox/junitcdi/trunk/junitcdi/</connection>
 		<developerConnection>scm:svn:https://www.seasar.org/svn/sandbox/junitcdi/trunk/junitcdi/</developerConnection>
-		<url>http://svn.seasar.org/browse/?root=sandbox.junitcdi</url>
+		<url>http://www.seasar.org/source/browse/sandbox.junitcdi/</url>
 	</scm>
 	<repositories>
 		<repository>
