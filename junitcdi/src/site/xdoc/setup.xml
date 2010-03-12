@@ -118,7 +118,66 @@
 </dependencies>
 ]]></source>
 			<p>
-				詳細は各サブプロジェクトの「プロジェクト情報」－「依存関係」を参照してください．
+				各サブプロジェクトのグループ ID およびアーティファクト ID は以下のとおりです．
+			</p>
+			<table border="1">
+				<thead>
+					<tr>
+						<th>サブプロジェクト</th>
+						<th>グループID</th>
+						<th>アーティファクトID</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<a href="junitcdi-core/dependencies.html">Core</a>
+						</td>
+						<td>
+							<code>org.seasar.junitcdi</code>
+						</td>
+						<td>
+							<code>junitcdi-core</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="junitcdi-easymock/dependencies.html">EasyMock</a>
+						</td>
+						<td>
+							<code>org.seasar.junitcdi</code>
+						</td>
+						<td>
+							<code>junitcdi-easymock</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="junitcdi-jta/dependencies.html">JTA</a>
+						</td>
+						<td>
+							<code>org.seasar.junitcdi</code>
+						</td>
+						<td>
+							<code>junitcdi-jta</code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="junitcdi-validation/dependencies.html">Bean Validation</a>
+						</td>
+						<td>
+							<code>org.seasar.junitcdi</code>
+						</td>
+						<td>
+							<code>junitcdi-validation</code>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p>
+				バージョンや依存しているライブラリの詳細は，各サブプロジェクトのリンク先
+				(「プロジェクト情報」－「依存関係」) を参照してください．
 			</p>
 		</section>
 	</body>
