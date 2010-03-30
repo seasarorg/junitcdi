@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionPoint;
 import javax.naming.Context;
 
@@ -36,8 +37,11 @@ public class ResourceInjectionServicesImpl extends AbstractResourceServices
     // /////////////////////////////////////////////////////////////////
     // constants
     //
+    /** Javaコンポーネントのプレフィックス */
+    protected static final String JAVA_NAMESPACE_PREFIX = "java:";
+
     /** JNDI環境名のプレフィックス */
-    protected static final String RESOURCE_LOOKUP_PREFIX = "java:comp/env";
+    protected static final String ENV_NAMESPACE_PREFIX = "java:comp/env/";
 
     // /////////////////////////////////////////////////////////////////
     // static fields
@@ -47,6 +51,7 @@ public class ResourceInjectionServicesImpl extends AbstractResourceServices
         new HashMap<Class<?>, String>();
     static {
         try {
+            builtins.put(BeanManager.class, "java:comp/BeanManager");
             builtins.put(
                 Class.forName("javax.transaction.UserTransaction"),
                 "java:comp/UserTransaction");
@@ -83,7 +88,10 @@ public class ResourceInjectionServicesImpl extends AbstractResourceServices
         }
         final String name = resource.name();
         if (!name.equals("")) {
-            return RESOURCE_LOOKUP_PREFIX + "/" + name;
+            if (name.startsWith(JAVA_NAMESPACE_PREFIX)) {
+                return name;
+            }
+            return ENV_NAMESPACE_PREFIX + name;
         }
         final Type type = injectionPoint.getType();
         if (type instanceof Class<?>) {

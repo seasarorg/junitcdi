@@ -16,6 +16,7 @@
 package org.seasar.junitcdi.core.internal;
 
 import java.util.Hashtable;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.inject.spi.Bean;
@@ -53,19 +54,35 @@ public class JndiContext implements Context {
 
     @Override
     public Object lookup(final String name) throws NamingException {
-        Object obj = map.get(name);
-        if (obj == null) {
-            return null;
+        final BeanManager beanManager = BeanManagerHelper.getBeanManager();
+        if (name.equals("java:comp/BeanManager")) {
+            return beanManager;
         }
-        if (obj instanceof Bean<?>) {
-            Bean<?> bean = (Bean<?>) obj;
-            BeanManager beanManager = BeanManagerHelper.getBeanManager();
-            return beanManager.getReference(
-                bean,
-                bean.getBeanClass(),
-                beanManager.createCreationalContext(bean));
+        final Object obj = map.get(name);
+        if (obj != null) {
+            if (obj instanceof Bean<?>) {
+                final Bean<?> bean = (Bean<?>) obj;
+                return beanManager.getReference(
+                    bean,
+                    bean.getBeanClass(),
+                    beanManager.createCreationalContext(bean));
+            }
+            return obj;
         }
-        return obj;
+        final String baseName;
+        if (name.startsWith("java:comp/env/")) {
+            baseName = name.substring("java:comp/env/".length());
+        } else if (name.startsWith("java:comp/")) {
+            baseName = name.substring("java:comp/".length());
+        } else {
+            baseName = name;
+        }
+        try {
+            return BeanManagerHelper.getBeanInstance(baseName);
+        } catch (NoSuchElementException e) {
+            throw (NamingException) new NameNotFoundException(baseName)
+                .initCause(e);
+        }
     }
 
     @Override
