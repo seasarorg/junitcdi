@@ -35,6 +35,7 @@ import org.junit.runners.model.Statement;
 import org.seasar.junitcdi.core.AfterMethod;
 import org.seasar.junitcdi.core.BeforeMethod;
 import org.seasar.junitcdi.core.event.TestInfo;
+import org.seasar.junitcdi.core.exception.TestClassNotBeanException;
 import org.seasar.junitcdi.core.internal.BeanManagerHelper;
 import org.seasar.junitcdi.core.internal.LifecycleHelper;
 import org.seasar.junitcdi.core.internal.TestEventNotifier;
@@ -170,13 +171,13 @@ public class CDI extends BlockJUnit4ClassRunner {
                 try {
                     statement.evaluate();
                     testEventNotifier.testMethodFinished(createTestInfo(null));
-                } catch (Throwable e) {
+                } catch (final Throwable e) {
                     testEventNotifier.testMethodFinished(createTestInfo(e));
                     throw e;
                 }
             }
 
-            private TestInfo createTestInfo(Throwable e) {
+            private TestInfo createTestInfo(final Throwable e) {
                 return new TestInfo(getDescription(), testBean, test, method
                     .getMethod(), e);
             }

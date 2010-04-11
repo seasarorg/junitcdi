@@ -79,7 +79,7 @@ public class JndiContext implements Context {
         }
         try {
             return BeanManagerHelper.getBeanInstance(baseName);
-        } catch (NoSuchElementException e) {
+        } catch (final NoSuchElementException e) {
             throw (NamingException) new NameNotFoundException(baseName)
                 .initCause(e);
         }

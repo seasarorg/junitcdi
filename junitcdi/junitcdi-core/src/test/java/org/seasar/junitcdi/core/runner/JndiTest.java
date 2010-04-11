@@ -48,6 +48,9 @@ public class JndiTest {
     @Resource(mappedName = "java:comp/BeanManager")
     BeanManager beanManagerAnnotatedResourceWithName;
 
+    /**
+     * @throws Exception
+     */
     @Test
     public void test() throws Exception {
         assertThat(beanManagerAnnotatedResource, is(sameInstance(beanManager)));

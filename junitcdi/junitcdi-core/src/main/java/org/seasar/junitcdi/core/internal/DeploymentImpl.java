@@ -50,7 +50,8 @@ public class DeploymentImpl implements Deployment {
     }
 
     @Override
-    public BeanDeploymentArchive loadBeanDeploymentArchive(Class<?> beanClass) {
+    public BeanDeploymentArchive loadBeanDeploymentArchive(
+            final Class<?> beanClass) {
         return beanDeploymentArchive;
     }
 }

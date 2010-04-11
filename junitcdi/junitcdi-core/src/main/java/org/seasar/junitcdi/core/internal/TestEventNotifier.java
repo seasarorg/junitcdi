@@ -238,7 +238,7 @@ public class TestEventNotifier extends RunListener {
      *             オブザーバーがスローした例外
      */
     protected void rethrow(final ObserverException e) throws Exception {
-        Throwable t = e.getCause();
+        final Throwable t = e.getCause();
         if (t instanceof Exception) {
             throw (Exception) e.getCause();
         } else if (t instanceof Error) {

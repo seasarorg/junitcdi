@@ -13,8 +13,9 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.junitcdi.core.runner;
+package org.seasar.junitcdi.core.exception;
 
+import org.seasar.junitcdi.core.runner.CDI;
 
 /**
  * {@link CDI}ランナーが指定されたテストクラスがCDIで管理されるBeanでない場合にスローされます．
