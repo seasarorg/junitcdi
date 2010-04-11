@@ -19,7 +19,6 @@ import java.lang.annotation.Annotation;
 import java.util.ServiceLoader;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
@@ -30,9 +29,6 @@ import org.jboss.weld.bootstrap.api.Service;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.bootstrap.spi.Deployment;
 import org.jboss.weld.context.api.BeanStore;
-import org.jboss.weld.environment.se.discovery.SEWeldDeployment;
-import org.jboss.weld.environment.se.events.ContainerInitialized;
-import org.jboss.weld.environment.se.util.WeldManagerUtils;
 import org.jboss.weld.injection.spi.ResourceInjectionServices;
 
 /**
@@ -77,10 +73,7 @@ public class BeanManagerHelper {
      */
     public static <T> T getBeanInstance(final Class<T> beanClass,
             final Annotation... bindings) {
-        return WeldManagerUtils.getInstanceByType(
-            getBeanManager(),
-            beanClass,
-            bindings);
+        return getBeanInstance(getBeanManager(), beanClass, bindings);
     }
 
     /**
@@ -96,12 +89,12 @@ public class BeanManagerHelper {
      *            バインディング
      * @return bean
      */
+    @SuppressWarnings("unchecked")
     public static <T> T getBeanInstance(final BeanManager beanManager,
             final Class<T> beanClass, final Annotation... bindings) {
-        return WeldManagerUtils.getInstanceByType(
-            beanManager,
-            beanClass,
-            bindings);
+        final Bean<?> bean = beanManager.getBeans(beanClass).iterator().next();
+        return (T) beanManager.getReference(bean, beanClass, beanManager
+            .createCreationalContext(bean));
     }
 
     /**
@@ -134,11 +127,10 @@ public class BeanManagerHelper {
             final String name) {
         final Bean<T> bean =
             (Bean<T>) beanManager.getBeans(name).iterator().next();
-        final CreationalContext<T> cc =
-            beanManager.createCreationalContext(bean);
-        final T instance =
-            (T) beanManager.getReference(bean, bean.getBeanClass(), cc);
-        return instance;
+        return (T) beanManager.getReference(
+            bean,
+            bean.getBeanClass(),
+            beanManager.createCreationalContext(bean));
     }
 
     /**
@@ -172,7 +164,7 @@ public class BeanManagerHelper {
      */
     protected static BeanManager createBeanManager() {
         // setup deployment
-        final Deployment deployment = new SEWeldDeployment() {};
+        final Deployment deployment = new DeploymentImpl();
         deployment.getServices().add(
             ResourceInjectionServices.class,
             new ResourceInjectionServicesImpl());
@@ -199,7 +191,6 @@ public class BeanManagerHelper {
         bootstrap.deployBeans();
         bootstrap.validateBeans();
         bootstrap.endInitialization();
-        beanManager.fireEvent(new ContainerInitialized());
 
         return beanManager;
     }
