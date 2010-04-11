@@ -82,10 +82,15 @@
 
 		<section name="News">
 			<dl>
-				<!--
-					<dt>2010/01/20</dt> <dd> <div> JUnit CDI Extensions 0.0.0
-					をリリースしました． ( <a href="downloads.html">ダウンロード</a> ) </div> </dd>
-				-->
+				<dt>2010/04/10</dt>
+				<dd>
+					<div>
+						JUnit CDI Extensions 0.0.0
+						をリリースしました． (
+						<a href="downloads.html">ダウンロード</a>
+						)
+					</div>
+				</dd>
 				<dt>2010/01/15</dt>
 				<dd>
 					<div>
